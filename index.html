@@ -1,94 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tariful Islam - QR & Calc Pro</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tariful Islam - QR & Calc Pro</title>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script src="https://unpkg.com/html5-qrcode"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode"></script>
 
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500&display=swap');
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500&display=swap');
 
-*{box-sizing:border-box;font-family:'Google Sans',sans-serif;margin:0;padding:0}
-body{background:#1a110f;color:#efdbd5;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+        * { box-sizing: border-box; font-family: 'Google Sans', sans-serif; margin: 0; padding: 0; }
+        body { background-color: #1a110f; color: #efdbd5; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
 
-/* Home */
-#home-screen{display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;gap:15px;width:100%}
-.menu-btn{width:85%;max-width:400px;padding:30px;font-size:1.2rem;font-weight:bold;border:none;border-radius:20px}
-.qr-menu{background:#553f38;color:#efdbd5}
-.calc-menu{background:#8b442d;color:#ffdad0}
+        /* Navigation Styles */
+        #home-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; gap: 15px; width: 100%; position: relative; }
+        .top-owner { position: absolute; top: 30px; font-size: 0.9rem; color: #f7e3a0; letter-spacing: 2px; text-transform: uppercase; font-weight: bold; border-bottom: 2px solid #8b442d; }
 
-/* Sections */
-.app-section{display:none;width:100%;flex-direction:column;align-items:center;padding:20px}
-.header-row{width:100%;display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
-.back-btn{background:#352d2b;color:#efdbd5;border:1px solid #553f38;padding:10px 20px;border-radius:50px}
+        .menu-btn { width: 85%; max-width: 400px; padding: 30px; font-size: 1.2rem; font-weight: bold; border: none; border-radius: 20px; cursor: pointer; transition: 0.2s; }
+        .qr-menu { background-color: #553f38; color: #efdbd5; }
+        .calc-menu { background-color: #8b442d; color: #ffdad0; }
+        .history-menu { background-color: #352d2b; color: #f7e3a0; padding: 15px; font-size: 1rem; }
 
-/* QR Scanner FIX */
-#scanner-container{
-    width:100%;
-    max-width:400px;
-    height:300px;          /* 🔥 MAIN FIX */
-    border-radius:15px;
-    overflow:hidden;
-    background:#000;
-    border:2px solid #553f38;
-}
+        /* App Sections */
+        .app-section { display: none; width: 100%; flex-direction: column; align-items: center; padding: 20px; }
+        .header-row { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .back-btn { background-color: #352d2b; color: #efdbd5; border: 1px solid #553f38; padding: 10px 20px; border-radius: 50px; cursor: pointer; }
+        .scan-nav-btn { background-color: #8b442d; color: white; border: none; padding: 10px 15px; border-radius: 12px; font-weight: bold; cursor: pointer; }
 
-.result-box{width:100%;max-width:400px;background:#2a1f1d;padding:15px;margin-top:15px;border-radius:15px;text-align:center}
+        /* QR Scanner Display */
+        #scanner-container { width: 100%; max-width: 400px; border-radius: 15px; overflow: hidden; border: 2px solid #553f38; background: #000; }
+        .result-box { width: 100%; max-width: 400px; background: #2a1f1d; padding: 20px; margin-top: 20px; border-radius: 15px; text-align: center; word-wrap: break-word; }
+        .custom-file-upload { display: block; background: #2a1f1d; color: #f7e3a0; text-align: center; padding: 15px; border-radius: 15px; border: 1px dashed #f7e3a0; margin-top: 15px; cursor: pointer; width: 100%; max-width: 400px;}
 
-/* Calculator */
-.calculator{width:100%;max-width:360px}
-.screen{height:120px;display:flex;justify-content:flex-end;align-items:flex-end;margin-bottom:20px}
-.input-text{font-size:3rem}
-.buttons-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-.calc-btn{height:70px;width:70px;border-radius:50%;border:none;font-size:1.5rem}
-.num-btn{background:#352d2b;color:#efdbd5}
-.func-btn{background:#553f38;color:#efdbd5}
-.ac-btn{background:#8b442d;color:#ffdad0}
-.equal-btn{background:#f7e3a0;color:#3e2e00;border-radius:28px}
-</style>
+        /* Calculator Styles */
+        .calculator { width: 100%; max-width: 360px; }
+        .screen { height: 120px; display: flex; justify-content: flex-end; align-items: flex-end; margin-bottom: 20px; }
+        .input-text { font-size: 3rem; text-align: right; width: 100%; }
+        .buttons-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+        .calc-btn { height: 70px; width: 70px; border-radius: 50%; border: none; font-size: 1.5rem; cursor: pointer; }
+        .num-btn { background: #352d2b; color: #efdbd5; }
+        .func-btn { background: #553f38; color: #efdbd5; }
+        .ac-btn { background: #8b442d; color: #ffdad0; }
+        .equal-btn { background: #f7e3a0; color: #3e2e00; border-radius: 28px; }
+
+        /* History Styles */
+        .history-list { width: 100%; max-width: 400px; background: #2a1f1d; border-radius: 15px; padding: 10px; margin-top: 10px; max-height: 400px; overflow-y: auto; }
+        .history-item { padding: 12px; border-bottom: 1px solid #553f38; font-size: 0.85rem; }
+        
+        #qrcode-display { background: white; padding: 15px; border-radius: 15px; }
+    </style>
 </head>
-
 <body>
 
 <div id="home-screen">
-    <button class="menu-btn qr-menu" onclick="openApp('qr-section')">QR Code</button>
-    <button class="menu-btn calc-menu" onclick="openApp('calc-section')">Calculator</button>
+    <div class="top-owner">Owner by MD TARIFUL ISLAM</div>
+    <button class="menu-btn qr-menu" onclick="openApp('qr-section')">1 : QR Code Generator</button>
+    <button class="menu-btn calc-menu" onclick="openApp('calc-section')">2 : Calculator</button>
+    <button class="menu-btn history-menu" onclick="showHistory()">📜 View Saved History</button>
 </div>
 
-<!-- QR SECTION -->
 <div id="qr-section" class="app-section">
     <div class="header-row">
         <button class="back-btn" onclick="goHome()">← Back</button>
-        <button class="back-btn" onclick="openApp('scan-section')">Scan</button>
+        <button class="scan-nav-btn" onclick="openApp('scan-section')">📷 Start Scan</button>
     </div>
-
-    <input id="qrcode-input" placeholder="Enter text"
-    oninput="generateQR()"
-    style="padding:15px;width:90%;border-radius:12px;background:#2a1f1d;color:white">
-
-    <div id="qrcode-display" style="margin-top:15px;background:white;padding:10px;border-radius:15px"></div>
+    <input id="qrcode-input" type="text" placeholder="Type text or link" oninput="generateQR()" style="padding:15px; width:90%; border-radius:12px; border:2px solid #553f38; background:#2a1f1d; color:white; text-align:center; margin-bottom: 20px;">
+    <div id="qrcode-display"></div>
+    <button id="download-btn" onclick="downloadAndSaveQR()" style="background:#f7e3a0; color:#3e2e00; border:none; padding:12px 25px; border-radius:12px; font-weight:bold; display:none; margin-top: 15px;">Download & Save</button>
 </div>
 
-<!-- SCAN SECTION -->
 <div id="scan-section" class="app-section">
     <div class="header-row">
         <button class="back-btn" onclick="openApp('qr-section')">← Back</button>
-        <b>QR Scanner</b>
+        <span style="font-weight: bold;">QR Scanner</span>
     </div>
-
     <div id="scanner-container"></div>
-
+    <label for="qr-input-file" class="custom-file-upload">🖼️ Choice from Gallery</label>
+    <input type="file" id="qr-input-file" accept="image/*" style="display:none">
     <div class="result-box">
-        <p id="scan-result">Waiting for scan...</p>
+        <h3 style="color:#f7e3a0; margin-bottom:5px;">Scan Result:</h3>
+        <p id="scan-result">Wait for scan...</p>
     </div>
 </div>
 
-<!-- CALC -->
 <div id="calc-section" class="app-section">
-    <button class="back-btn" onclick="goHome()">← Back</button>
+    <div class="header-row"><button class="back-btn" onclick="goHome()">← Back</button></div>
     <div class="calculator">
         <div class="screen"><div id="display" class="input-text">0</div></div>
         <div class="buttons-grid">
@@ -99,7 +97,7 @@ body{background:#1a110f;color:#efdbd5;min-height:100vh;display:flex;flex-directi
             <button class="calc-btn num-btn" onclick="append('7')">7</button>
             <button class="calc-btn num-btn" onclick="append('8')">8</button>
             <button class="calc-btn num-btn" onclick="append('9')">9</button>
-            <button class="calc-btn func-btn" onclick="append('-')">-</button>
+            <button class="calc-btn func-btn" onclick="append('-')">−</button>
             <button class="calc-btn num-btn" onclick="append('4')">4</button>
             <button class="calc-btn num-btn" onclick="append('5')">5</button>
             <button class="calc-btn num-btn" onclick="append('6')">6</button>
@@ -108,58 +106,107 @@ body{background:#1a110f;color:#efdbd5;min-height:100vh;display:flex;flex-directi
             <button class="calc-btn num-btn" onclick="append('2')">2</button>
             <button class="calc-btn num-btn" onclick="append('3')">3</button>
             <button class="calc-btn equal-btn" onclick="calculate()">=</button>
-            <button class="calc-btn num-btn" style="grid-column:span 2;width:155px;border-radius:40px" onclick="append('0')">0</button>
+            <button class="calc-btn num-btn" style="grid-column: span 2; width: 155px; border-radius: 40px;" onclick="append('0')">0</button>
             <button class="calc-btn num-btn" onclick="append('.')">.</button>
         </div>
     </div>
 </div>
 
-<script>
-let html5QrCode=null;
+<div id="history-section" class="app-section">
+    <div class="header-row"><button class="back-btn" onclick="goHome()">← Back</button></div>
+    <h2 style="color:#f7e3a0">User Activity History</h2>
+    <div class="history-list" id="history-container"></div>
+    <button style="background:#8b442d; color:white; padding:10px 20px; border:none; border-radius:10px; margin-top:15px;" onclick="clearHistory()">Clear History</button>
+</div>
 
-function openApp(id){
-    document.getElementById('home-screen').style.display='none';
-    document.querySelectorAll('.app-section').forEach(s=>s.style.display='none');
-    document.getElementById(id).style.display='flex';
-    if(id==='scan-section') startScanner();
+<script>
+let html5QrCode = null;
+
+function openApp(id) {
+    document.getElementById('home-screen').style.display = 'none';
+    document.querySelectorAll('.app-section').forEach(s => s.style.display = 'none');
+    document.getElementById(id).style.display = 'flex';
+    if (id === 'scan-section') startAutoScanner();
     else stopScanner();
 }
-function goHome(){
+
+function goHome() {
+    document.getElementById('home-screen').style.display = 'flex';
+    document.querySelectorAll('.app-section').forEach(s => s.style.display = 'none');
     stopScanner();
-    document.getElementById('home-screen').style.display='flex';
-    document.querySelectorAll('.app-section').forEach(s=>s.style.display='none');
 }
 
-/* QR */
-const qr=new QRCode(document.getElementById("qrcode-display"),{width:200,height:200});
-function generateQR(){
-    const v=qrcode-input.value.trim();
-    if(v) qr.makeCode(v);
+/* History Core Logic */
+function saveToHistory(type, content) {
+    let history = JSON.parse(localStorage.getItem('tariful_history') || '[]');
+    history.unshift({ type, content, time: new Date().toLocaleString() });
+    localStorage.setItem('tariful_history', JSON.stringify(history.slice(0, 30)));
 }
 
-/* SCANNER FIXED */
-function startScanner(){
-    if(html5QrCode && html5QrCode.isScanning) return;
-    html5QrCode=new Html5Qrcode("scanner-container");
-    html5QrCode.start(
-        {facingMode:"environment"},
-        {fps:10,qrbox:250},
-        txt=>document.getElementById('scan-result').innerText=txt
-    ).catch(e=>{
-        document.getElementById('scan-result').innerText="Camera error";
-        console.error(e);
-    });
-}
-function stopScanner(){
-    if(html5QrCode && html5QrCode.isScanning) html5QrCode.stop();
+function showHistory() {
+    openApp('history-section');
+    const container = document.getElementById('history-container');
+    const history = JSON.parse(localStorage.getItem('tariful_history') || '[]');
+    container.innerHTML = history.length === 0 ? "<p>No history saved.</p>" : 
+        history.map(item => `<div class="history-item">
+            <strong>${item.type}:</strong> ${item.content}<br>
+            <small style="opacity:0.6">${item.time}</small>
+        </div>`).join('');
 }
 
-/* CALC */
-const d=document.getElementById("display");
-function append(v){d.innerText=d.innerText==="0"?v:d.innerText+v}
-function clearAll(){d.innerText="0"}
-function backspace(){d.innerText=d.innerText.length>1?d.innerText.slice(0,-1):"0"}
-function calculate(){try{d.innerText=eval(d.innerText)}catch{d.innerText="Error"}}
+function clearHistory() { localStorage.removeItem('tariful_history'); showHistory(); }
+
+/* QR Logic (Gen & Scan) */
+const qrcodeContainer = new QRCode(document.getElementById("qrcode-display"), { width: 200, height: 200 });
+function generateQR() {
+    const val = document.getElementById("qrcode-input").value;
+    if (val.trim() === "") { document.getElementById("download-btn").style.display = "none"; }
+    else { qrcodeContainer.makeCode(val); document.getElementById("download-btn").style.display = "block"; }
+}
+
+function downloadAndSaveQR() {
+    const val = document.getElementById("qrcode-input").value;
+    saveToHistory('QR Created', val);
+    const canvas = document.querySelector("#qrcode-display canvas");
+    const a = document.createElement("a");
+    a.href = canvas.toDataURL("image/png");
+    a.download = "qr_tariful.png";
+    a.click();
+}
+
+function startAutoScanner() {
+    if (!html5QrCode) html5QrCode = new Html5Qrcode("scanner-container");
+    html5QrCode.start({ facingMode: "environment" }, { fps: 10, qrbox: 250 }, (text) => {
+        document.getElementById('scan-result').innerHTML = `<a href="${text}" target="_blank" style="color:white">${text}</a>`;
+        saveToHistory('QR Scanned', text);
+        if (navigator.vibrate) navigator.vibrate(100);
+    }).catch(() => { document.getElementById('scan-result').innerText = "Camera error."; });
+}
+
+function stopScanner() { if (html5QrCode && html5QrCode.isScanning) html5QrCode.stop(); }
+
+document.getElementById('qr-input-file').addEventListener('change', e => {
+    if (e.target.files.length === 0) return;
+    const reader = new Html5Qrcode("scanner-container");
+    reader.scanFile(e.target.files[0], true).then(text => {
+        document.getElementById('scan-result').innerText = text;
+        saveToHistory('Gallery Scan', text);
+    }).catch(() => { document.getElementById('scan-result').innerText = "No QR found."; });
+});
+
+/* Calc Logic */
+const display = document.getElementById("display");
+function append(val) { display.innerText = display.innerText === "0" ? val : display.innerText + val; }
+function clearAll() { display.innerText = "0"; }
+function backspace() { display.innerText = display.innerText.length > 1 ? display.innerText.slice(0, -1) : "0"; }
+function calculate() {
+    try {
+        let exp = display.innerText;
+        let res = eval(exp.replace('×', '*').replace('÷', '/'));
+        saveToHistory('Calc', `${exp} = ${res}`);
+        display.innerText = res;
+    } catch { display.innerText = "Error"; setTimeout(clearAll, 1000); }
+}
 </script>
 
 </body>
