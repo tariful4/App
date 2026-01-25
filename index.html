@@ -14,12 +14,11 @@
         * { box-sizing: border-box; font-family: 'Google Sans', sans-serif; margin: 0; padding: 0; }
         body { background-color: #1a110f; color: #efdbd5; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
 
-        /* Home Screen */
-        #home-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; gap: 20px; width: 100%; position: relative; }
-        .top-owner { position: absolute; top: 30px; font-size: 0.9rem; color: #f7e3a0; letter-spacing: 2px; text-transform: uppercase; font-weight: bold; border-bottom: 2px solid #8b442d; padding-bottom: 5px; }
+        /* Navigation Styles */
+        #home-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; gap: 15px; width: 100%; position: relative; }
+        .top-owner { position: absolute; top: 30px; font-size: 0.9rem; color: #f7e3a0; letter-spacing: 2px; text-transform: uppercase; font-weight: bold; border-bottom: 2px solid #8b442d; }
 
-        .menu-btn { width: 85%; max-width: 400px; padding: 35px 20px; font-size: 1.2rem; font-weight: bold; border: none; border-radius: 20px; cursor: pointer; transition: transform 0.2s; }
-        .menu-btn:active { transform: scale(0.95); }
+        .menu-btn { width: 85%; max-width: 400px; padding: 30px; font-size: 1.2rem; font-weight: bold; border: none; border-radius: 20px; cursor: pointer; transition: 0.2s; }
         .qr-menu { background-color: #553f38; color: #efdbd5; }
         .calc-menu { background-color: #8b442d; color: #ffdad0; }
         .history-menu { background-color: #352d2b; color: #f7e3a0; padding: 15px; font-size: 1rem; }
@@ -28,18 +27,16 @@
         .app-section { display: none; width: 100%; flex-direction: column; align-items: center; padding: 20px; }
         .header-row { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .back-btn { background-color: #352d2b; color: #efdbd5; border: 1px solid #553f38; padding: 10px 20px; border-radius: 50px; cursor: pointer; }
-        .user-name { color: #8b442d; font-size: 0.8rem; font-weight: 500; letter-spacing: 2px; margin-bottom: 10px; text-transform: uppercase; }
+        .scan-nav-btn { background-color: #8b442d; color: white; border: none; padding: 10px 15px; border-radius: 12px; font-weight: bold; cursor: pointer; }
 
-        /* History Styles */
-        .history-list { width: 100%; max-width: 400px; background: #2a1f1d; border-radius: 15px; padding: 15px; margin-top: 10px; max-height: 400px; overflow-y: auto; }
-        .history-item { padding: 10px; border-bottom: 1px solid #553f38; font-size: 0.9rem; display: flex; justify-content: space-between; align-items: center; }
-        .clear-btn { background: #8b442d; color: white; border: none; padding: 8px 15px; border-radius: 10px; cursor: pointer; margin-top: 15px; }
-
-        /* Calculator/QR Styles (Existing) */
+        /* QR Scanner Display */
         #scanner-container { width: 100%; max-width: 400px; border-radius: 15px; overflow: hidden; border: 2px solid #553f38; background: #000; }
-        .result-box { width: 90%; max-width: 400px; background: #2a1f1d; border: 1px solid #553f38; padding: 20px; margin-top: 20px; border-radius: 15px; text-align: center; word-wrap: break-word; }
+        .result-box { width: 100%; max-width: 400px; background: #2a1f1d; padding: 20px; margin-top: 20px; border-radius: 15px; text-align: center; word-wrap: break-word; }
+        .custom-file-upload { display: block; background: #2a1f1d; color: #f7e3a0; text-align: center; padding: 15px; border-radius: 15px; border: 1px dashed #f7e3a0; margin-top: 15px; cursor: pointer; width: 100%; max-width: 400px;}
+
+        /* Calculator Styles */
         .calculator { width: 100%; max-width: 360px; }
-        .screen { height: 120px; display: flex; justify-content: flex-end; align-items: flex-end; margin-bottom: 10px; overflow: hidden; }
+        .screen { height: 120px; display: flex; justify-content: flex-end; align-items: flex-end; margin-bottom: 20px; }
         .input-text { font-size: 3rem; text-align: right; width: 100%; }
         .buttons-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
         .calc-btn { height: 70px; width: 70px; border-radius: 50%; border: none; font-size: 1.5rem; cursor: pointer; }
@@ -47,7 +44,12 @@
         .func-btn { background: #553f38; color: #efdbd5; }
         .ac-btn { background: #8b442d; color: #ffdad0; }
         .equal-btn { background: #f7e3a0; color: #3e2e00; border-radius: 28px; }
-        #qrcode-display { background: white; padding: 15px; border-radius: 15px; min-height: 200px; }
+
+        /* History Styles */
+        .history-list { width: 100%; max-width: 400px; background: #2a1f1d; border-radius: 15px; padding: 10px; margin-top: 10px; max-height: 400px; overflow-y: auto; }
+        .history-item { padding: 12px; border-bottom: 1px solid #553f38; font-size: 0.85rem; }
+        
+        #qrcode-display { background: white; padding: 15px; border-radius: 15px; }
     </style>
 </head>
 <body>
@@ -56,15 +58,31 @@
     <div class="top-owner">Owner by MD TARIFUL ISLAM</div>
     <button class="menu-btn qr-menu" onclick="openApp('qr-section')">1 : QR Code Generator</button>
     <button class="menu-btn calc-menu" onclick="openApp('calc-section')">2 : Calculator</button>
-    <button class="menu-btn history-menu" onclick="showHistory()">📜 View History</button>
+    <button class="menu-btn history-menu" onclick="showHistory()">📜 View Saved History</button>
 </div>
 
 <div id="qr-section" class="app-section">
-    <div class="header-row"><button class="back-btn" onclick="goHome()">← Back</button></div>
-    <div class="user-name">QR GENERATOR</div>
-    <input id="qrcode-input" type="text" placeholder="Type link..." oninput="generateQR()" style="padding:15px; width:280px; border-radius:12px; border:2px solid #553f38; background:#2a1f1d; color:white; margin-bottom: 20px;">
+    <div class="header-row">
+        <button class="back-btn" onclick="goHome()">← Back</button>
+        <button class="scan-nav-btn" onclick="openApp('scan-section')">📷 Start Scan</button>
+    </div>
+    <input id="qrcode-input" type="text" placeholder="Type text or link" oninput="generateQR()" style="padding:15px; width:90%; border-radius:12px; border:2px solid #553f38; background:#2a1f1d; color:white; text-align:center; margin-bottom: 20px;">
     <div id="qrcode-display"></div>
     <button id="download-btn" onclick="downloadAndSaveQR()" style="background:#f7e3a0; color:#3e2e00; border:none; padding:12px 25px; border-radius:12px; font-weight:bold; display:none; margin-top: 15px;">Download & Save</button>
+</div>
+
+<div id="scan-section" class="app-section">
+    <div class="header-row">
+        <button class="back-btn" onclick="openApp('qr-section')">← Back</button>
+        <span style="font-weight: bold;">QR Scanner</span>
+    </div>
+    <div id="scanner-container"></div>
+    <label for="qr-input-file" class="custom-file-upload">🖼️ Choice from Gallery</label>
+    <input type="file" id="qr-input-file" accept="image/*" style="display:none">
+    <div class="result-box">
+        <h3 style="color:#f7e3a0; margin-bottom:5px;">Scan Result:</h3>
+        <p id="scan-result">Wait for scan...</p>
+    </div>
 </div>
 
 <div id="calc-section" class="app-section">
@@ -96,57 +114,59 @@
 
 <div id="history-section" class="app-section">
     <div class="header-row"><button class="back-btn" onclick="goHome()">← Back</button></div>
-    <h2 style="color:#f7e3a0">User History</h2>
+    <h2 style="color:#f7e3a0">User Activity History</h2>
     <div class="history-list" id="history-container"></div>
-    <button class="clear-btn" onclick="clearHistory()">Clear All History</button>
+    <button style="background:#8b442d; color:white; padding:10px 20px; border:none; border-radius:10px; margin-top:15px;" onclick="clearHistory()">Clear History</button>
 </div>
 
 <script>
-/* Navigation */
+let html5QrCode = null;
+
 function openApp(id) {
     document.getElementById('home-screen').style.display = 'none';
     document.querySelectorAll('.app-section').forEach(s => s.style.display = 'none');
     document.getElementById(id).style.display = 'flex';
+    if (id === 'scan-section') startAutoScanner();
+    else stopScanner();
 }
+
 function goHome() {
     document.getElementById('home-screen').style.display = 'flex';
     document.querySelectorAll('.app-section').forEach(s => s.style.display = 'none');
+    stopScanner();
 }
 
-/* LocalStorage History Logic */
+/* History Core Logic */
 function saveToHistory(type, content) {
-    let history = JSON.parse(localStorage.getItem('myAppHistory') || '[]');
+    let history = JSON.parse(localStorage.getItem('tariful_history') || '[]');
     history.unshift({ type, content, time: new Date().toLocaleString() });
-    localStorage.setItem('myAppHistory', JSON.stringify(history.slice(0, 50))); // Save last 50 items
+    localStorage.setItem('tariful_history', JSON.stringify(history.slice(0, 30)));
 }
 
 function showHistory() {
     openApp('history-section');
     const container = document.getElementById('history-container');
-    const history = JSON.parse(localStorage.getItem('myAppHistory') || '[]');
-    container.innerHTML = history.length === 0 ? "<p>No history yet.</p>" : 
+    const history = JSON.parse(localStorage.getItem('tariful_history') || '[]');
+    container.innerHTML = history.length === 0 ? "<p>No history saved.</p>" : 
         history.map(item => `<div class="history-item">
-            <span><strong>${item.type}:</strong> ${item.content}</span>
-            <small style="color:#8b442d">${item.time}</small>
+            <strong>${item.type}:</strong> ${item.content}<br>
+            <small style="opacity:0.6">${item.time}</small>
         </div>`).join('');
 }
 
-function clearHistory() {
-    localStorage.removeItem('myAppHistory');
-    showHistory();
-}
+function clearHistory() { localStorage.removeItem('tariful_history'); showHistory(); }
 
-/* Updated QR Logic */
+/* QR Logic (Gen & Scan) */
 const qrcodeContainer = new QRCode(document.getElementById("qrcode-display"), { width: 200, height: 200 });
 function generateQR() {
     const val = document.getElementById("qrcode-input").value;
-    const btn = document.getElementById("download-btn");
-    if (val.trim() === "") { btn.style.display = "none"; }
-    else { qrcodeContainer.makeCode(val); btn.style.display = "block"; }
+    if (val.trim() === "") { document.getElementById("download-btn").style.display = "none"; }
+    else { qrcodeContainer.makeCode(val); document.getElementById("download-btn").style.display = "block"; }
 }
+
 function downloadAndSaveQR() {
     const val = document.getElementById("qrcode-input").value;
-    saveToHistory('QR', val);
+    saveToHistory('QR Created', val);
     const canvas = document.querySelector("#qrcode-display canvas");
     const a = document.createElement("a");
     a.href = canvas.toDataURL("image/png");
@@ -154,23 +174,41 @@ function downloadAndSaveQR() {
     a.click();
 }
 
-/* Updated Calc Logic */
+function startAutoScanner() {
+    if (!html5QrCode) html5QrCode = new Html5Qrcode("scanner-container");
+    html5QrCode.start({ facingMode: "environment" }, { fps: 10, qrbox: 250 }, (text) => {
+        document.getElementById('scan-result').innerHTML = `<a href="${text}" target="_blank" style="color:white">${text}</a>`;
+        saveToHistory('QR Scanned', text);
+        if (navigator.vibrate) navigator.vibrate(100);
+    }).catch(() => { document.getElementById('scan-result').innerText = "Camera error."; });
+}
+
+function stopScanner() { if (html5QrCode && html5QrCode.isScanning) html5QrCode.stop(); }
+
+document.getElementById('qr-input-file').addEventListener('change', e => {
+    if (e.target.files.length === 0) return;
+    const reader = new Html5Qrcode("scanner-container");
+    reader.scanFile(e.target.files[0], true).then(text => {
+        document.getElementById('scan-result').innerText = text;
+        saveToHistory('Gallery Scan', text);
+    }).catch(() => { document.getElementById('scan-result').innerText = "No QR found."; });
+});
+
+/* Calc Logic */
 const display = document.getElementById("display");
 function append(val) { display.innerText = display.innerText === "0" ? val : display.innerText + val; }
 function clearAll() { display.innerText = "0"; }
 function backspace() { display.innerText = display.innerText.length > 1 ? display.innerText.slice(0, -1) : "0"; }
 function calculate() {
     try {
-        let expression = display.innerText;
-        let result = eval(expression.replace('×', '*').replace('÷', '/'));
-        saveToHistory('Calc', `${expression} = ${result}`);
-        display.innerText = result;
-    } catch {
-        display.innerText = "Error";
-        setTimeout(clearAll, 1000);
-    }
+        let exp = display.innerText;
+        let res = eval(exp.replace('×', '*').replace('÷', '/'));
+        saveToHistory('Calc', `${exp} = ${res}`);
+        display.innerText = res;
+    } catch { display.innerText = "Error"; setTimeout(clearAll, 1000); }
 }
 </script>
 
 </body>
-</html>
+    </html>
+    
