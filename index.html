@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tariful Islam</title>
+    <title>Tariful Islam - QR & Calc</title>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://unpkg.com/html5-qrcode"></script>
@@ -33,21 +33,37 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 80vh;
+            height: 100vh;
             gap: 25px;
             width: 100%;
+            position: relative;
+        }
+
+        .owner-text {
+            position: absolute;
+            bottom: 40px;
+            font-size: 0.9rem;
+            color: #8b442d;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-weight: 500;
+            border-top: 1px solid #352d2b;
+            padding-top: 10px;
         }
 
         .menu-btn {
             width: 85%;
             max-width: 400px;
             padding: 45px 20px;
-            font-size: 1.6rem;
+            font-size: 1.4rem;
             font-weight: bold;
             border: none;
             border-radius: 25px;
             cursor: pointer;
+            transition: transform 0.2s;
         }
+        
+        .menu-btn:active { transform: scale(0.95); }
 
         .qr-menu { background-color: #553f38; color: #efdbd5; }
         .calc-menu { background-color: #8b442d; color: #ffdad0; }
@@ -97,75 +113,53 @@
             text-transform: uppercase;
         }
 
-        /* QR Generator Section */
-        .qr-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-        }
-
-        #qrcode-input {
-            padding: 18px;
-            width: 300px;
-            border-radius: 15px;
-            border: 2px solid #553f38;
-            background: #2a1f1d;
-            color: white;
-            font-size: 1.1rem;
-            text-align: center;
-        }
-
-        #qrcode-display {
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-        }
-
-        .download-btn {
-            background-color: #f7e3a0;
-            color: #3e2e00;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 12px;
-            font-weight: bold;
-            cursor: pointer;
-            display: none;
-        }
-
-        /* QR Scanner Section */
+        /* QR Scanner & Gallery Styles */
         #scanner-container {
             width: 100%;
             max-width: 400px;
             border-radius: 15px;
             overflow: hidden;
             border: 2px solid #553f38;
+            background: #000;
         }
 
-        .result-box {
+        .file-input-wrapper {
+            margin-top: 20px;
             width: 90%;
             max-width: 400px;
-            background: #2a1f1d;
-            border: 1px solid #553f38;
-            padding: 20px;
-            margin-top: 20px;
-            border-radius: 15px;
-            text-align: center;
-            word-wrap: break-word;
         }
 
-        .result-box h3 { color: #f7e3a0; margin-bottom: 10px; }
+        .custom-file-upload {
+            display: block;
+            background-color: #2a1f1d;
+            color: #f7e3a0;
+            text-align: center;
+            padding: 15px;
+            border-radius: 15px;
+            border: 1px dashed #f7e3a0;
+            cursor: pointer;
+            font-weight: 500;
+        }
 
-        /* Calculator Styles (একই থাকছে) */
+        #qr-input-file { display: none; }
+
+        .result-box {
+            width: 90%; max-width: 400px; background: #2a1f1d; border: 1px solid #553f38;
+            padding: 20px; margin-top: 20px; border-radius: 15px; text-align: center; word-wrap: break-word;
+        }
+
+        /* Calculator Styles */
         .calculator { width: 100%; max-width: 360px; }
         .screen { height: 160px; display: flex; justify-content: flex-end; align-items: flex-end; margin-bottom: 20px; }
-        .input-text { font-size: 3.5rem; text-align: right; width: 100%; }
+        .input-text { font-size: 3.5rem; text-align: right; width: 100%; overflow: hidden; }
         .buttons-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
         .calc-btn { height: 75px; width: 75px; border-radius: 50%; border: none; font-size: 1.6rem; cursor: pointer; }
         .num-btn { background: #352d2b; color: #efdbd5; }
         .func-btn { background: #553f38; color: #efdbd5; }
         .ac-btn { background: #8b442d; color: #ffdad0; }
         .equal-btn { background: #f7e3a0; color: #3e2e00; border-radius: 28px; }
+        
+        #qrcode-display { background: white; padding: 20px; border-radius: 15px; min-height: 200px; }
     </style>
 </head>
 <body>
@@ -173,6 +167,8 @@
 <div id="home-screen">
     <button class="menu-btn qr-menu" onclick="openApp('qr-section')">1 : QR Code Generator</button>
     <button class="menu-btn calc-menu" onclick="openApp('calc-section')">2 : Calculator</button>
+    
+    <div class="owner-text">Owner by MD TARIFUL ISLAM</div>
 </div>
 
 <div id="qr-section" class="app-section">
@@ -180,12 +176,11 @@
         <button class="back-btn" onclick="goHome()">← Back</button>
         <button class="scan-nav-btn" onclick="openApp('scan-section')">📷 Scan QR</button>
     </div>
-    <div class="user-name">TARIFUL ISLAM</div>
-
-    <div class="qr-wrapper">
-        <input id="qrcode-input" type="text" placeholder="Type text or link" oninput="generateQR()">
+    <div class="user-name">MD TARIFUL ISLAM</div>
+    <div style="display:flex; flex-direction:column; align-items:center; gap:20px;">
+        <input id="qrcode-input" type="text" placeholder="Type text or link" oninput="generateQR()" style="padding:18px; width:300px; border-radius:15px; border:2px solid #553f38; background:#2a1f1d; color:white; text-align:center;">
         <div id="qrcode-display"></div>
-        <button id="download-btn" class="download-btn" onclick="downloadQR()">Download QR</button>
+        <button id="download-btn" onclick="downloadQR()" style="background:#f7e3a0; color:#3e2e00; border:none; padding:12px 25px; border-radius:12px; font-weight:bold; display:none;">Download QR</button>
     </div>
 </div>
 
@@ -196,20 +191,25 @@
     </div>
     
     <div id="scanner-container"></div>
+
+    <div class="file-input-wrapper">
+        <label for="qr-input-file" class="custom-file-upload">
+            🖼️ Choice Photo from Gallery
+        </label>
+        <input type="file" id="qr-input-file" accept="image/*">
+    </div>
     
     <div class="result-box">
-        <h3>Result:</h3>
-        <p id="scan-result">No QR code detected yet.</p>
+        <h3 style="color:#f7e3a0; margin-bottom:10px;">Result:</h3>
+        <p id="scan-result">Scanning or upload a photo...</p>
     </div>
 </div>
 
 <div id="calc-section" class="app-section">
     <button class="back-btn" onclick="goHome()">← Back</button>
     <div class="calculator">
-        <div class="screen">
-            <div id="display" class="input-text">0</div>
-        </div>
-        <div class="user-name">TARIFUL ISLAM</div>
+        <div class="screen"><div id="display" class="input-text">0</div></div>
+        <div class="user-name">MD TARIFUL ISLAM</div>
         <div class="buttons-grid">
             <button class="calc-btn ac-btn" onclick="clearAll()">AC</button>
             <button class="calc-btn func-btn" onclick="append('%')">%</button>
@@ -235,18 +235,14 @@
 </div>
 
 <script>
-let html5QrcodeScanner = null;
+let html5QrCode = null;
 
 function openApp(id) {
     document.getElementById('home-screen').style.display = 'none';
     document.querySelectorAll('.app-section').forEach(s => s.style.display = 'none');
     document.getElementById(id).style.display = 'flex';
-
-    if (id === 'scan-section') {
-        startScanner();
-    } else {
-        stopScanner();
-    }
+    if (id === 'scan-section') startAutoScanner();
+    else stopScanner();
 }
 
 function goHome() {
@@ -255,24 +251,15 @@ function goHome() {
     stopScanner();
 }
 
-/* QR Generator Logic */
-const qrcodeContainer = new QRCode(document.getElementById("qrcode-display"), {
-    width: 200,
-    height: 200
-});
-
+/* QR Logic */
+const qrcodeContainer = new QRCode(document.getElementById("qrcode-display"), { width: 200, height: 200 });
 function generateQR() {
     const val = document.getElementById("qrcode-input").value;
     const btn = document.getElementById("download-btn");
-    if (val.trim() === "") {
-        document.getElementById("qrcode-display").innerHTML = "";
-        btn.style.display = "none";
-    } else {
-        qrcodeContainer.makeCode(val);
-        btn.style.display = "block";
-    }
+    const displayDiv = document.getElementById("qrcode-display");
+    if (val.trim() === "") { displayDiv.style.visibility = "hidden"; btn.style.display = "none"; }
+    else { displayDiv.style.visibility = "visible"; qrcodeContainer.makeCode(val); btn.style.display = "block"; }
 }
-
 function downloadQR() {
     const canvas = document.querySelector("#qrcode-display canvas");
     const a = document.createElement("a");
@@ -281,28 +268,28 @@ function downloadQR() {
     a.click();
 }
 
-/* QR Scanner Logic */
-function startScanner() {
-    if (!html5QrcodeScanner) {
-        html5QrcodeScanner = new Html5QrcodeScanner(
-            "scanner-container", { fps: 10, qrbox: 250 }
-        );
-    }
-    html5QrcodeScanner.render(onScanSuccess);
+/* Scanner Logic */
+function startAutoScanner() {
+    if (!html5QrCode) html5QrCode = new Html5Qrcode("scanner-container");
+    html5QrCode.start({ facingMode: "environment" }, { fps: 10, qrbox: 250 }, onScanSuccess)
+    .catch(err => { document.getElementById('scan-result').innerText = "Camera not available."; });
 }
-
-function stopScanner() {
-    if (html5QrcodeScanner) {
-        html5QrcodeScanner.clear().catch(err => console.error("Failed to clear scanner", err));
-    }
-}
-
+function stopScanner() { if (html5QrCode && html5QrCode.isScanning) html5QrCode.stop(); }
 function onScanSuccess(decodedText) {
-    document.getElementById('scan-result').innerHTML = `<a href="${decodedText}" target="_blank" style="color: #f7e3a0;">${decodedText}</a>`;
-    // স্ক্যান হওয়ার পর একটি শব্দ বা ভাইব্রেশন চাইলে এখানে যোগ করা যায়
+    document.getElementById('scan-result').innerHTML = `<a href="${decodedText}" target="_blank" style="color: #efdbd5;">${decodedText}</a>`;
+    if (navigator.vibrate) navigator.vibrate(100);
 }
 
-/* Calculator Logic */
+/* Gallery Logic */
+document.getElementById('qr-input-file').addEventListener('change', e => {
+    if (e.target.files.length === 0) return;
+    const html5QrCodeFile = new Html5Qrcode("scanner-container");
+    html5QrCodeFile.scanFile(e.target.files[0], true)
+    .then(text => onScanSuccess(text))
+    .catch(err => { document.getElementById('scan-result').innerText = "QR code not found."; });
+});
+
+/* Calc Logic */
 const display = document.getElementById("display");
 function append(val) { display.innerText = display.innerText === "0" ? val : display.innerText + val; }
 function clearAll() { display.innerText = "0"; }
@@ -314,4 +301,4 @@ function calculate() {
 </script>
 
 </body>
-  </html>
+</html>
