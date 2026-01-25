@@ -39,16 +39,17 @@
             position: relative;
         }
 
-        .owner-text {
+        /* Top Owner Text */
+        .top-owner {
             position: absolute;
-            bottom: 40px;
-            font-size: 0.9rem;
-            color: #8b442d;
-            letter-spacing: 3px;
+            top: 50px;
+            font-size: 1rem;
+            color: #f7e3a0;
+            letter-spacing: 2px;
             text-transform: uppercase;
-            font-weight: 500;
-            border-top: 1px solid #352d2b;
-            padding-top: 10px;
+            font-weight: bold;
+            border-bottom: 2px solid #8b442d;
+            padding-bottom: 5px;
         }
 
         .menu-btn {
@@ -165,10 +166,10 @@
 <body>
 
 <div id="home-screen">
+    <div class="top-owner">Owner by MD TARIFUL ISLAM</div>
+    
     <button class="menu-btn qr-menu" onclick="openApp('qr-section')">1 : QR Code Generator</button>
     <button class="menu-btn calc-menu" onclick="openApp('calc-section')">2 : Calculator</button>
-    
-    <div class="owner-text">Owner by MD TARIFUL ISLAM</div>
 </div>
 
 <div id="qr-section" class="app-section">
