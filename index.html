@@ -3,119 +3,169 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TARIFUL 2.0 - Pro Player</title>
+<title>TARIFUL 2.0</title>
 
 <style>
-/* Purono style gulo thakbe... */
 *{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif}
-body{background:#1a110f;color:#efdbd5}
+body{background:#1a110f;color:#efdbd5;overflow-x:hidden}
 
-.section{display:none;padding:15px}
-#playerBox{background:#000;border-radius:15px;overflow:hidden;margin-bottom:15px}
-video{width:100%;max-height:50vh;transition: 0.3s;}
+/* Home */
+#home{height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:15px}
+.menu{width:85%;max-width:400px;padding:20px;border:none;border-radius:18px;font-size:1.1rem;font-weight:bold;cursor:pointer;transition:0.3s}
+.video{background:#2e4d3c;color:#d0ffda}
+.calc{background:#8b442d;color:#ffdad0}
 
-/* Audio Mode Style */
-.audio-mode video {
-    height: 0px; /* Video lukiye fela hobe */
-    opacity: 0;
-}
-.audio-visualizer {
-    display: none;
-    height: 100px;
-    text-align: center;
-    line-height: 100px;
-    background: #2a1f1d;
-    font-weight: bold;
-    color: #d0ffda;
-}
+/* Sections */
+.section{display:none;padding:15px;animation:fadeIn 0.4s}
+@keyframes fadeIn {from{opacity:0} to{opacity:1}}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
+.back{background:#352d2b;color:#fff;border:none;padding:8px 18px;border-radius:25px;cursor:pointer}
+
+/* Media Player */
+#playerBox{display:none;background:#000;border-radius:15px;overflow:hidden;margin-bottom:10px}
+video{width:100%;max-height:50vh;display:block}
+.audio-mode video { height: 0; opacity: 0; }
+.audio-visualizer { display: none; padding: 40px; text-align: center; background: #2a1f1d; color: #d0ffda; font-weight: bold; }
 .audio-mode .audio-visualizer { display: block; }
 
 .controls{display:flex;justify-content:center;gap:10px;padding:15px;background:#2a1f1d}
-.btn-ctrl{background:#352d2b;color:white;border:none;width:50px;height:50px;border-radius:50%;cursor:pointer}
+.btn-ctrl{background:#352d2b;color:white;border:none;width:50px;height:50px;border-radius:50%;cursor:pointer;font-size:1.2rem}
+.mode-switch{background:#2a1f1d;padding:10px;border-radius:12px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;font-size:0.9rem}
 
-/* Toggle Switch */
-.mode-switch {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: #2a1f1d;
-    padding: 10px 15px;
-    border-radius: 12px;
-    margin-bottom: 10px;
-}
+/* Calculator */
+.calc-box{max-width:360px;margin:auto}
+.screen{height:90px;font-size:2.2rem;text-align:right;padding:10px;background:#2a1f1d;border-radius:15px;margin-bottom:15px;overflow:hidden}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.btn{height:60px;border:none;border-radius:50%;font-size:1.2rem;cursor:pointer}
+.num{background:#352d2b;color:white}
+.func{background:#553f38;color:white}
+.ac{background:#8b442d;color:white}
+.eq{background:#f7e3a0;color:#3e2e00;border-radius:30px}
+
+/* History */
+.hist-btn-main{background:#8b442d;color:#fff;border:none;padding:8px 20px;border-radius:20px;font-weight:bold;cursor:pointer}
+#historyPanel{display:none;margin-top:20px;max-width:360px;margin:auto;background:#2a1f1d;padding:15px;border-radius:15px}
+.hist-item{padding:8px 0;border-bottom:1px solid #352d2b}
+
+.video-item{padding:12px;background:#2a1f1d;border-radius:10px;margin-top:8px;cursor:pointer}
 </style>
 </head>
 
 <body>
 
-<div id="videoSec" class="section" style="display:block">
-    <div class="header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-        <h3 style="color:#d0ffda">TARIFUL Pro Player</h3>
+<div id="home">
+    <h1 style="color:#d0ffda;margin-bottom:20px">TARIFUL 2.0</h1>
+    <button class="menu video" onclick="openSec('videoSec')">🎬 Media Player</button>
+    <button class="menu calc" onclick="openSec('calcSec')">🧮 Calculator</button>
+</div>
+
+<div id="videoSec" class="section">
+    <div class="header">
+        <button class="back" onclick="goHome()">← Back</button>
+        <h3 style="color:#d0ffda">Media Player</h3>
     </div>
 
-    <div id="playerContainer">
-        <div id="playerBox">
-            <div class="audio-visualizer">🎵 Audio Mode Active</div>
-            <video id="mainMedia" playsinline></video>
-            
-            <div class="mode-switch">
-                <span>Play as Audio Only</span>
-                <input type="checkbox" id="audioToggle" onchange="toggleAudioMode()">
-            </div>
-
-            <div class="controls">
-                <button class="btn-ctrl" onclick="prev()">⏮</button>
-                <button class="btn-ctrl" onclick="togglePlay()" id="pBtn">▶</button>
-                <button class="btn-ctrl" onclick="next()">⏭</button>
-                <button class="btn-ctrl" onclick="toggleLoop()" id="lBtn">🔁</button>
-            </div>
+    <div id="playerBox">
+        <div class="audio-visualizer">🎵 Audio Mode Active</div>
+        <video id="mainMedia" playsinline></video>
+        <div class="controls">
+            <button class="btn-ctrl" onclick="prev()">⏮</button>
+            <button class="btn-ctrl" onclick="togglePlay()" id="pBtn">▶</button>
+            <button class="btn-ctrl" onclick="next()">⏭</button>
         </div>
     </div>
 
-    <input type="file" id="fileInput" multiple accept="video/*,audio/*" onchange="handleFiles(event)">
+    <div class="mode-switch">
+        <span>Audio Only Mode (Background)</span>
+        <input type="checkbox" id="audioToggle" onchange="toggleAudioMode()">
+    </div>
+
+    <input type="file" id="fileInput" multiple accept="video/*,audio/*" onchange="handleFiles(event)" style="margin-bottom:15px">
     <div id="videoList"></div>
 </div>
 
+<div id="calcSec" class="section">
+    <div class="header">
+        <button class="back" onclick="goHome()">← Back</button>
+        <button class="hist-btn-main" onclick="toggleHistory()">History 🕒</button>
+    </div>
+
+    <div class="calc-box">
+        <div class="screen" id="disp">0</div>
+        <div class="grid">
+            <button class="btn ac" onclick="clr()">AC</button>
+            <button class="btn func" onclick="add('/')">÷</button>
+            <button class="btn func" onclick="add('*')">×</button>
+            <button class="btn num" onclick="bk()">⌫</button>
+
+            <button class="btn num" onclick="add('7')">7</button>
+            <button class="btn num" onclick="add('8')">8</button>
+            <button class="btn num" onclick="add('9')">9</button>
+            <button class="btn func" onclick="add('-')">−</button>
+
+            <button class="btn num" onclick="add('4')">4</button>
+            <button class="btn num" onclick="add('5')">5</button>
+            <button class="btn num" onclick="add('6')">6</button>
+            <button class="btn func" onclick="add('+')">+</button>
+
+            <button class="btn num" onclick="add('1')">1</button>
+            <button class="btn num" onclick="add('2')">2</button>
+            <button class="btn num" onclick="add('3')">3</button>
+            <button class="btn eq" onclick="calc()">=</button>
+
+            <button class="btn num" style="grid-column:span 2;border-radius:40px" onclick="add('0')">0</button>
+            <button class="btn num" onclick="add('.')">.</button>
+        </div>
+    </div>
+
+    <div id="historyPanel">
+        <div style="display:flex;justify-content:space-between;margin-bottom:10px">
+            <span>Saved History</span>
+            <button onclick="clearHistory()" style="background:none;border:none;color:#ff8b8b;cursor:pointer">Clear</button>
+        </div>
+        <div id="histList"></div>
+    </div>
+</div>
+
 <script>
+const media = document.getElementById("mainMedia");
 let queue = [];
 let currentIdx = 0;
-const media = document.getElementById("mainMedia");
 
+function openSec(id){
+    document.getElementById("home").style.display="none";
+    document.querySelectorAll(".section").forEach(s=>s.style.display="none");
+    document.getElementById(id).style.display="block";
+    if(id==='calcSec') renderHistory();
+}
+
+function goHome(){
+    document.getElementById("home").style.display="flex";
+    document.querySelectorAll(".section").forEach(s=>s.style.display="none");
+}
+
+/* --- Media Logic --- */
 function handleFiles(e) {
     queue = Array.from(e.target.files);
+    renderList();
     play(0);
 }
 
-function toggleAudioMode() {
-    const isAudioOnly = document.getElementById("audioToggle").checked;
-    if(isAudioOnly) {
-        document.getElementById("playerBox").classList.add("audio-mode");
-    } else {
-        document.getElementById("playerBox").classList.remove("audio-mode");
-    }
+function renderList() {
+    const list = document.getElementById("videoList");
+    list.innerHTML = queue.map((f, i) => `<div class="video-item" onclick="play(${i})">${f.name}</div>`).join('');
 }
 
 function play(index) {
     if (index < 0 || index >= queue.length) return;
     currentIdx = index;
-    const url = URL.createObjectURL(queue[index]);
-    media.src = url;
+    media.src = URL.createObjectURL(queue[index]);
+    document.getElementById("playerBox").style.display = "block";
     
-    // Media Session API: Jeta app close korle-o background-e audio dhore rakhe
     if ('mediaSession' in navigator) {
-        navigator.mediaSession.metadata = new MediaMetadata({
-            title: queue[index].name,
-            artist: 'Tariful Player',
-            album: 'Background Play Active'
-        });
-
-        // Background Controls
-        navigator.mediaSession.setActionHandler('play', () => media.play());
-        navigator.mediaSession.setActionHandler('pause', () => media.pause());
-        navigator.mediaSession.setActionHandler('previoustrack', () => prev());
-        navigator.mediaSession.setActionHandler('nexttrack', () => next());
+        navigator.mediaSession.metadata = new MediaMetadata({ title: queue[index].name });
     }
-
+    
     media.play();
     document.getElementById("pBtn").innerText = "⏸";
 }
@@ -124,20 +174,57 @@ function togglePlay() {
     media.paused ? (media.play(), document.getElementById("pBtn").innerText = "⏸") : (media.pause(), document.getElementById("pBtn").innerText = "▶");
 }
 
-function next() { if (currentIdx < queue.length - 1) play(currentIdx + 1); else play(0); }
-function prev() { if (currentIdx > 0) play(currentIdx - 1); }
+function next() { play(currentIdx + 1); }
+function prev() { play(currentIdx - 1); }
 
-/* --- Background Optimization --- */
-document.addEventListener("visibilitychange", function() {
-    // App minimize korle-o jate bondho na hoy
-    if (document.hidden && !media.paused) {
-        media.play(); 
-    }
-});
+function toggleAudioMode() {
+    document.getElementById("playerBox").classList.toggle("audio-mode", document.getElementById("audioToggle").checked);
+}
 
-// Video end hole auto next
+// Background play and Auto-next
 media.onended = () => next();
-</script>
+document.addEventListener("visibilitychange", () => { if(document.hidden && !media.paused) media.play(); });
 
+/* --- Calculator Logic --- */
+function add(v){
+    let d=document.getElementById("disp");
+    d.innerText = d.innerText==="0" ? v : d.innerText+v;
+}
+function clr(){ document.getElementById("disp").innerText="0"; }
+function bk(){
+    let d=document.getElementById("disp");
+    d.innerText = d.innerText.length>1 ? d.innerText.slice(0,-1) : "0";
+}
+function calc(){
+    let d=document.getElementById("disp");
+    try {
+        let res = eval(d.innerText.replace('×','*').replace('÷','/').replace('−','-'));
+        saveHistory(`${d.innerText} = ${res}`);
+        d.innerText = res;
+    } catch { d.innerText = "Error"; }
+}
+
+function toggleHistory(){
+    let p = document.getElementById("historyPanel");
+    p.style.display = p.style.display==='block' ? 'none' : 'block';
+}
+
+function saveHistory(item){
+    let h = JSON.parse(localStorage.getItem("calc_h") || "[]");
+    h.unshift(item);
+    localStorage.setItem("calc_h", JSON.stringify(h.slice(0,20)));
+    renderHistory();
+}
+
+function renderHistory(){
+    let h = JSON.parse(localStorage.getItem("calc_h") || "[]");
+    document.getElementById("histList").innerHTML = h.map(i => `<div class="hist-item">${i}</div>`).join('');
+}
+
+function clearHistory(){
+    localStorage.removeItem("calc_h");
+    renderHistory();
+}
+</script>
 </body>
 </html>
