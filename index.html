@@ -40,8 +40,8 @@ video{width:100%;max-height:50vh;display:block;cursor:pointer}
 .btn-ctrl{background:#352d2b;color:white;border:none;width:45px;height:45px;border-radius:50%;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center}
 .btn-stop{background:#8b442d}
 
-/* Hidden Loop Button */
-#loopBtn { position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.6); color: white; border: none; padding: 5px 10px; border-radius: 15px; font-size: 0.7rem; display: none; cursor: pointer; z-index: 10; }
+/* Loop Button */
+#loopBtn { position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.6); color: white; border: none; padding: 5px 10px; border-radius: 15px; font-size: 0.7rem; display: none; cursor: pointer; z-index: 10; border: 1px solid #d0ffda; }
 
 /* Calculator & History (No Changes) */
 .calc-box{max-width:360px;margin:auto}
@@ -65,7 +65,6 @@ video{width:100%;max-height:50vh;display:block;cursor:pointer}
 <div id="home">
     <p class="owner-text">Owner by TARIFUL ISLAM</p>
     <h1 class="main-title">TARIFUL 2.0</h1>
-    
     <button class="menu video" onclick="openSec('videoSec')">🎬 Media Player</button>
     <button class="menu calc" onclick="openSec('calcSec')">🧮 Calculator</button>
 </div>
@@ -169,25 +168,43 @@ function play(index) {
     currentIdx = index;
     media.src = URL.createObjectURL(queue[index]);
     document.getElementById("playerBox").style.display = "block";
+    media.loop = isLooping; // Loop status load hobe
     media.play();
     document.getElementById("pBtn").innerText = "⏸";
 }
 function togglePlay() { media.paused ? (media.play(), document.getElementById("pBtn").innerText = "⏸") : (media.pause(), document.getElementById("pBtn").innerText = "▶"); }
 function stopMedia() { media.pause(); media.currentTime = 0; document.getElementById("pBtn").innerText = "▶"; }
-function next() { play(currentIdx + 1); }
-function prev() { play(currentIdx - 1); }
+function next() { if(currentIdx < queue.length-1) play(currentIdx + 1); else play(0); }
+function prev() { if(currentIdx > 0) play(currentIdx - 1); }
 function toggleAudioMode() { document.getElementById("playerBox").classList.toggle("audio-mode", document.getElementById("audioToggle").checked); }
-function showLoop() { loopBtn.style.display = "block"; setTimeout(() => { if(!isLooping) loopBtn.style.display = "none"; }, 3000); }
+
+/* Loop Fix */
+function showLoop() {
+    loopBtn.style.display = "block";
+    // 4 second por auto hide hobe jodi Loop OFF thake
+    if(!isLooping) {
+        setTimeout(() => { if(!isLooping) loopBtn.style.display = "none"; }, 4000);
+    }
+}
+
 function toggleLoop() {
     isLooping = !isLooping;
-    media.loop = isLooping;
+    media.loop = isLooping; // Media element-e loop set kora holo
     loopBtn.innerText = isLooping ? "Loop: ON" : "Loop: OFF";
     loopBtn.style.background = isLooping ? "#2e4d3c" : "rgba(0,0,0,0.6)";
+    if(!isLooping) setTimeout(() => { loopBtn.style.display = "none"; }, 1000);
 }
-media.onended = () => { if(!isLooping) next(); };
+
+// Jodi Loop OFF thake tobei auto-next hobe
+media.onended = () => { 
+    if(!isLooping) {
+        next(); 
+    }
+};
+
 document.addEventListener("visibilitychange", () => { if(document.hidden && !media.paused) media.play(); });
 
-/* Calculator Logic (Preserved) */
+/* Calculator (Original) */
 function add(v){ let d=document.getElementById("disp"); d.innerText = d.innerText==="0" ? v : d.innerText+v; }
 function clr(){ document.getElementById("disp").innerText="0"; }
 function bk(){ let d=document.getElementById("disp"); d.innerText = d.innerText.length>1 ? d.innerText.slice(0,-1) : "0"; }
