@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TARIFUL ISLAM</title>
+    <title>TARIFUL ISLAM - Multi App</title>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://unpkg.com/html5-qrcode"></script>
@@ -18,10 +18,10 @@
         #home-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; gap: 15px; width: 100%; position: relative; }
         .top-owner { position: absolute; top: 30px; font-size: 0.9rem; color: #f7e3a0; letter-spacing: 2px; text-transform: uppercase; font-weight: bold; border-bottom: 2px solid #8b442d; }
 
-        .menu-btn { width: 85%; max-width: 400px; padding: 30px; font-size: 1.2rem; font-weight: bold; border: none; border-radius: 20px; cursor: pointer; transition: 0.2s; }
+        .menu-btn { width: 85%; max-width: 400px; padding: 25px; font-size: 1.1rem; font-weight: bold; border: none; border-radius: 20px; cursor: pointer; transition: 0.2s; }
         .qr-menu { background-color: #553f38; color: #efdbd5; }
         .calc-menu { background-color: #8b442d; color: #ffdad0; }
-        .video-menu { background-color: #2e4d3c; color: #d0ffda; } /* New Video Button Style */
+        .video-menu { background-color: #2e4d3c; color: #d0ffda; } /* Video Button */
         .history-menu { background-color: #352d2b; color: #f7e3a0; padding: 15px; font-size: 1rem; }
 
         /* App Sections */
@@ -30,10 +30,22 @@
         .back-btn { background-color: #352d2b; color: #efdbd5; border: 1px solid #553f38; padding: 10px 20px; border-radius: 50px; cursor: pointer; }
         .scan-nav-btn { background-color: #8b442d; color: white; border: none; padding: 10px 15px; border-radius: 12px; font-weight: bold; cursor: pointer; }
 
-        /* Video Player Custom Styles */
-        #video-container { width: 100%; max-width: 500px; background: #000; border-radius: 15px; overflow: hidden; margin-top: 10px; }
-        video { width: 100%; display: block; }
-        .video-input-label { display: block; background: #2e4d3c; color: #d0ffda; padding: 15px; border-radius: 15px; text-align: center; cursor: pointer; margin-top: 20px; width: 100%; max-width: 400px; border: 1px dashed #d0ffda; }
+        /* Pro Video Player Styles */
+        #player-wrapper { width: 100%; max-width: 600px; position: relative; background: #000; aspect-ratio: 16/9; display: none; border-radius: 15px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        #main-video { width: 100%; height: 100%; }
+        .gesture-area { position: absolute; top: 0; right: 0; width: 40%; height: 100%; z-index: 10; }
+        .vol-indicator { position: absolute; top: 50%; right: 20px; background: rgba(0,0,0,0.7); padding: 8px; border-radius: 8px; display: none; z-index: 20; color: white; }
+        .custom-controls { position: absolute; bottom: 0; width: 100%; background: linear-gradient(transparent, rgba(0,0,0,0.9)); display: flex; justify-content: center; gap: 25px; padding: 12px; z-index: 15; }
+        .ctrl-btn { background: none; border: none; color: white; font-size: 1.8rem; cursor: pointer; }
+        .video-grid { display: grid; grid-template-columns: 1fr; gap: 10px; width: 100%; max-width: 500px; }
+        .video-item { display: flex; align-items: center; background: #2a1f1d; padding: 12px; border-radius: 15px; cursor: pointer; border: 1px solid #3d2d2a; }
+        .thumb-icon { font-size: 1.5rem; margin-right: 15px; }
+        .video-title-text { font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        /* QR, Scanner & Result Box */
+        #scanner-container { width: 100%; max-width: 400px; border-radius: 15px; overflow: hidden; border: 2px solid #553f38; background: #000; }
+        .result-box { width: 100%; max-width: 400px; background: #2a1f1d; padding: 20px; margin-top: 20px; border-radius: 15px; text-align: center; word-wrap: break-word; }
+        .custom-file-upload { display: block; background: #2a1f1d; color: #f7e3a0; text-align: center; padding: 15px; border-radius: 15px; border: 1px dashed #f7e3a0; margin-top: 15px; cursor: pointer; width: 100%; }
 
         /* Calculator Styles */
         .calculator { width: 100%; max-width: 360px; }
@@ -46,10 +58,7 @@
         .ac-btn { background: #8b442d; color: #ffdad0; }
         .equal-btn { background: #f7e3a0; color: #3e2e00; border-radius: 28px; }
 
-        /* QR & History Styles */
-        #scanner-container { width: 100%; max-width: 400px; border-radius: 15px; overflow: hidden; border: 2px solid #553f38; background: #000; }
-        .result-box { width: 100%; max-width: 400px; background: #2a1f1d; padding: 20px; margin-top: 20px; border-radius: 15px; text-align: center; word-wrap: break-word; }
-        .custom-file-upload { display: block; background: #2a1f1d; color: #f7e3a0; text-align: center; padding: 15px; border-radius: 15px; border: 1px dashed #f7e3a0; margin-top: 15px; cursor: pointer; width: 100%; max-width: 400px;}
+        /* History Styles */
         .history-list { width: 100%; max-width: 400px; background: #2a1f1d; border-radius: 15px; padding: 10px; margin-top: 10px; max-height: 400px; overflow-y: auto; }
         .history-item { padding: 12px; border-bottom: 1px solid #553f38; font-size: 0.85rem; }
         #qrcode-display { background: white; padding: 15px; border-radius: 15px; }
@@ -61,28 +70,32 @@
     <div class="top-owner">Owner by MD TARIFUL ISLAM</div>
     <button class="menu-btn qr-menu" onclick="openApp('qr-section')">1 : QR Code Generator</button>
     <button class="menu-btn calc-menu" onclick="openApp('calc-section')">2 : Calculator</button>
-    <button class="menu-btn video-menu" onclick="openApp('video-section')">3 : Video Player</button>
+    <button class="menu-btn video-menu" onclick="openApp('video-section')">3 : Pro Video Player</button>
     <button class="menu-btn history-menu" onclick="showHistory()">📜 View Saved History</button>
 </div>
 
 <div id="video-section" class="app-section">
     <div class="header-row">
         <button class="back-btn" onclick="goHome()">← Back</button>
-        <span style="font-weight: bold; color: #d0ffda;">Video Player</span>
+        <span style="font-weight: bold; color: #d0ffda;">Pro Player</span>
     </div>
-    
-    <label for="video-upload" class="video-input-label">📁 Select Video from Storage</label>
-    <input type="file" id="video-upload" accept="video/*" style="display:none">
 
-    <div id="video-container" style="display:none;">
-        <video id="main-video-player" controls>
-            <source src="" id="video-src">
-            Your browser does not support the video tag.
-        </video>
+    <div id="player-wrapper">
+        <div class="gesture-area" id="vol-touch"></div>
+        <div class="vol-indicator" id="vol-ui">🔊 100%</div>
+        <video id="main-video"></video>
+        <div class="custom-controls">
+            <button class="ctrl-btn" onclick="playPrev()">⏮</button>
+            <button class="ctrl-btn" onclick="togglePlay()" id="play-pause">▶</button>
+            <button class="ctrl-btn" onclick="playNext()">⏭</button>
+            <button class="ctrl-btn" onclick="fullRotate()">🔄</button>
+        </div>
     </div>
-    <div class="result-box" id="video-info" style="display:none;">
-        <p id="video-name" style="color:#f7e3a0;"></p>
-    </div>
+
+    <button class="menu-btn video-menu" style="padding:15px; margin-bottom:15px;" onclick="document.getElementById('video-upload').click()">+ Load All Videos</button>
+    <input type="file" id="video-upload" accept="video/*" multiple style="display:none" onchange="handleFiles(event)">
+
+    <div class="video-grid" id="video-list-container"></div>
 </div>
 
 <div id="qr-section" class="app-section">
@@ -96,17 +109,11 @@
 </div>
 
 <div id="scan-section" class="app-section">
-    <div class="header-row">
-        <button class="back-btn" onclick="openApp('qr-section')">← Back</button>
-        <span style="font-weight: bold;">QR Scanner</span>
-    </div>
+    <div class="header-row"><button class="back-btn" onclick="openApp('qr-section')">← Back</button></div>
     <div id="scanner-container"></div>
-    <label for="qr-input-file" class="custom-file-upload">🖼️ Choice from Gallery</label>
+    <label for="qr-input-file" class="custom-file-upload">🖼️ Gallery</label>
     <input type="file" id="qr-input-file" accept="image/*" style="display:none">
-    <div class="result-box">
-        <h3 style="color:#f7e3a0; margin-bottom:5px;">Scan Result:</h3>
-        <p id="scan-result">Wait for scan...</p>
-    </div>
+    <div class="result-box"><p id="scan-result">Wait for scan...</p></div>
 </div>
 
 <div id="calc-section" class="app-section">
@@ -138,13 +145,16 @@
 
 <div id="history-section" class="app-section">
     <div class="header-row"><button class="back-btn" onclick="goHome()">← Back</button></div>
-    <h2 style="color:#f7e3a0">User Activity History</h2>
     <div class="history-list" id="history-container"></div>
-    <button style="background:#8b442d; color:white; padding:10px 20px; border:none; border-radius:10px; margin-top:15px;" onclick="clearHistory()">Clear History</button>
+    <button onclick="clearHistory()" style="background:#8b442d; color:white; padding:10px; border:none; border-radius:10px; margin-top:10px;">Clear</button>
 </div>
 
 <script>
 let html5QrCode = null;
+let videoList = [];
+let currentIndex = 0;
+const video = document.getElementById('main-video');
+const wrapper = document.getElementById('player-wrapper');
 
 function openApp(id) {
     document.getElementById('home-screen').style.display = 'none';
@@ -155,104 +165,116 @@ function openApp(id) {
 }
 
 function goHome() {
+    video.pause();
     document.getElementById('home-screen').style.display = 'flex';
     document.querySelectorAll('.app-section').forEach(s => s.style.display = 'none');
     stopScanner();
-    const video = document.getElementById('main-video-player');
-    video.pause(); // Stop video when going home
 }
 
-/* Video Player Logic */
-document.getElementById('video-upload').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (file) {
-        const videoURL = URL.createObjectURL(file);
-        const videoPlayer = document.getElementById('main-video-player');
-        const videoSrc = document.getElementById('video-src');
-        
-        videoSrc.src = videoURL;
-        document.getElementById('video-container').style.display = 'block';
-        document.getElementById('video-info').style.display = 'block';
-        document.getElementById('video-name').innerText = "Playing: " + file.name;
-        
-        videoPlayer.load();
-        videoPlayer.play();
-        saveToHistory('Video Played', file.name);
+/* --- Video Player Logic --- */
+function handleFiles(event) {
+    const files = Array.from(event.target.files);
+    const container = document.getElementById('video-list-container');
+    container.innerHTML = '';
+    videoList = [];
+    files.forEach((file, index) => {
+        const url = URL.createObjectURL(file);
+        videoList.push({ name: file.name, url: url });
+        const item = document.createElement('div');
+        item.className = 'video-item';
+        item.innerHTML = `<span class="thumb-icon">🎞️</span><div class="video-title-text">${file.name}</div>`;
+        item.onclick = () => playVideo(index);
+        container.appendChild(item);
+    });
+}
+function playVideo(index) {
+    currentIndex = index;
+    video.src = videoList[index].url;
+    wrapper.style.display = 'block';
+    video.play();
+    document.getElementById('play-pause').innerText = '⏸';
+    saveToHistory('Video', videoList[index].name);
+    window.scrollTo(0,0);
+}
+function togglePlay() {
+    if (video.paused) { video.play(); document.getElementById('play-pause').innerText = '⏸'; }
+    else { video.pause(); document.getElementById('play-pause').innerText = '▶'; }
+}
+function playNext() { if (currentIndex < videoList.length - 1) playVideo(currentIndex + 1); }
+function playPrev() { if (currentIndex > 0) playVideo(currentIndex - 1); }
+function fullRotate() {
+    if (wrapper.requestFullscreen) {
+        wrapper.requestFullscreen().then(() => {
+            if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(()=>{});
+        });
     }
+}
+// Volume Gesture
+let startY = 0;
+const volTouch = document.getElementById('vol-touch');
+const volUI = document.getElementById('vol-ui');
+volTouch.addEventListener('touchstart', e => { startY = e.touches[0].clientY; volUI.style.display='block'; });
+volTouch.addEventListener('touchmove', e => {
+    let moveY = e.touches[0].clientY;
+    let diff = startY - moveY;
+    if (diff > 0 && video.volume < 1) video.volume = Math.min(1, video.volume + 0.05);
+    else if (diff < 0 && video.volume > 0) video.volume = Math.max(0, video.volume - 0.05);
+    volUI.innerText = "🔊 " + Math.round(video.volume * 100) + "%";
+    startY = moveY;
 });
+volTouch.addEventListener('touchend', () => setTimeout(() => volUI.style.display='none', 1000));
+video.onended = playNext;
 
-/* History Core Logic */
-function saveToHistory(type, content) {
-    let history = JSON.parse(localStorage.getItem('tariful_history') || '[]');
-    history.unshift({ type, content, time: new Date().toLocaleString() });
-    localStorage.setItem('tariful_history', JSON.stringify(history.slice(0, 30)));
-}
-
-function showHistory() {
-    openApp('history-section');
-    const container = document.getElementById('history-container');
-    const history = JSON.parse(localStorage.getItem('tariful_history') || '[]');
-    container.innerHTML = history.length === 0 ? "<p>No history saved.</p>" : 
-        history.map(item => `<div class="history-item">
-            <strong>${item.type}:</strong> ${item.content}<br>
-            <small style="opacity:0.6">${item.time}</small>
-        </div>`).join('');
-}
-
-function clearHistory() { localStorage.removeItem('tariful_history'); showHistory(); }
-
-/* QR Logic (Gen & Scan) */
+/* --- QR & Scanner Logic --- */
 const qrcodeContainer = new QRCode(document.getElementById("qrcode-display"), { width: 200, height: 200 });
 function generateQR() {
     const val = document.getElementById("qrcode-input").value;
-    if (val.trim() === "") { document.getElementById("download-btn").style.display = "none"; }
+    if (val.trim() === "") document.getElementById("download-btn").style.display = "none";
     else { qrcodeContainer.makeCode(val); document.getElementById("download-btn").style.display = "block"; }
 }
-
 function downloadAndSaveQR() {
     const val = document.getElementById("qrcode-input").value;
     saveToHistory('QR Created', val);
     const canvas = document.querySelector("#qrcode-display canvas");
     const a = document.createElement("a");
     a.href = canvas.toDataURL("image/png");
-    a.download = "qr_tariful.png";
-    a.click();
+    a.download = "qr_tariful.png"; a.click();
 }
-
 function startAutoScanner() {
     if (!html5QrCode) html5QrCode = new Html5Qrcode("scanner-container");
     html5QrCode.start({ facingMode: "environment" }, { fps: 10, qrbox: 250 }, (text) => {
-        document.getElementById('scan-result').innerHTML = `<a href="${text}" target="_blank" style="color:white">${text}</a>`;
+        document.getElementById('scan-result').innerText = text;
         saveToHistory('QR Scanned', text);
-        if (navigator.vibrate) navigator.vibrate(100);
-    }).catch(() => { document.getElementById('scan-result').innerText = "Camera error."; });
+    }).catch(() => {});
 }
-
 function stopScanner() { if (html5QrCode && html5QrCode.isScanning) html5QrCode.stop(); }
 
-document.getElementById('qr-input-file').addEventListener('change', e => {
-    if (e.target.files.length === 0) return;
-    const reader = new Html5Qrcode("scanner-container");
-    reader.scanFile(e.target.files[0], true).then(text => {
-        document.getElementById('scan-result').innerText = text;
-        saveToHistory('Gallery Scan', text);
-    }).catch(() => { document.getElementById('scan-result').innerText = "No QR found."; });
-});
-
-/* Calc Logic */
+/* --- Calculator Logic --- */
 const display = document.getElementById("display");
 function append(val) { display.innerText = display.innerText === "0" ? val : display.innerText + val; }
 function clearAll() { display.innerText = "0"; }
 function backspace() { display.innerText = display.innerText.length > 1 ? display.innerText.slice(0, -1) : "0"; }
 function calculate() {
     try {
-        let exp = display.innerText;
-        let res = eval(exp.replace('×', '*').replace('÷', '/'));
-        saveToHistory('Calc', `${exp} = ${res}`);
+        let res = eval(display.innerText.replace('×', '*').replace('÷', '/'));
+        saveToHistory('Calc', `${display.innerText} = ${res}`);
         display.innerText = res;
-    } catch { display.innerText = "Error"; setTimeout(clearAll, 1000); }
+    } catch { display.innerText = "Error"; }
 }
-</script>
 
+/* --- History Logic --- */
+function saveToHistory(type, content) {
+    let history = JSON.parse(localStorage.getItem('tariful_history') || '[]');
+    history.unshift({ type, content, time: new Date().toLocaleString() });
+    localStorage.setItem('tariful_history', JSON.stringify(history.slice(0, 20)));
+}
+function showHistory() {
+    openApp('history-section');
+    const container = document.getElementById('history-container');
+    const history = JSON.parse(localStorage.getItem('tariful_history') || '[]');
+    container.innerHTML = history.length === 0 ? "Empty" : history.map(item => `<div class="history-item"><b>${item.type}:</b> ${item.content}</div>`).join('');
+}
+function clearHistory() { localStorage.removeItem('tariful_history'); showHistory(); }
+</script>
 </body>
 </html>
