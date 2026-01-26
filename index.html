@@ -21,6 +21,7 @@
         .menu-btn { width: 85%; max-width: 400px; padding: 30px; font-size: 1.2rem; font-weight: bold; border: none; border-radius: 20px; cursor: pointer; transition: 0.2s; }
         .qr-menu { background-color: #553f38; color: #efdbd5; }
         .calc-menu { background-color: #8b442d; color: #ffdad0; }
+        .video-menu { background-color: #2e4d3c; color: #d0ffda; } /* New Video Button Style */
         .history-menu { background-color: #352d2b; color: #f7e3a0; padding: 15px; font-size: 1rem; }
 
         /* App Sections */
@@ -29,10 +30,10 @@
         .back-btn { background-color: #352d2b; color: #efdbd5; border: 1px solid #553f38; padding: 10px 20px; border-radius: 50px; cursor: pointer; }
         .scan-nav-btn { background-color: #8b442d; color: white; border: none; padding: 10px 15px; border-radius: 12px; font-weight: bold; cursor: pointer; }
 
-        /* QR Scanner Display */
-        #scanner-container { width: 100%; max-width: 400px; border-radius: 15px; overflow: hidden; border: 2px solid #553f38; background: #000; }
-        .result-box { width: 100%; max-width: 400px; background: #2a1f1d; padding: 20px; margin-top: 20px; border-radius: 15px; text-align: center; word-wrap: break-word; }
-        .custom-file-upload { display: block; background: #2a1f1d; color: #f7e3a0; text-align: center; padding: 15px; border-radius: 15px; border: 1px dashed #f7e3a0; margin-top: 15px; cursor: pointer; width: 100%; max-width: 400px;}
+        /* Video Player Custom Styles */
+        #video-container { width: 100%; max-width: 500px; background: #000; border-radius: 15px; overflow: hidden; margin-top: 10px; }
+        video { width: 100%; display: block; }
+        .video-input-label { display: block; background: #2e4d3c; color: #d0ffda; padding: 15px; border-radius: 15px; text-align: center; cursor: pointer; margin-top: 20px; width: 100%; max-width: 400px; border: 1px dashed #d0ffda; }
 
         /* Calculator Styles */
         .calculator { width: 100%; max-width: 360px; }
@@ -45,10 +46,12 @@
         .ac-btn { background: #8b442d; color: #ffdad0; }
         .equal-btn { background: #f7e3a0; color: #3e2e00; border-radius: 28px; }
 
-        /* History Styles */
+        /* QR & History Styles */
+        #scanner-container { width: 100%; max-width: 400px; border-radius: 15px; overflow: hidden; border: 2px solid #553f38; background: #000; }
+        .result-box { width: 100%; max-width: 400px; background: #2a1f1d; padding: 20px; margin-top: 20px; border-radius: 15px; text-align: center; word-wrap: break-word; }
+        .custom-file-upload { display: block; background: #2a1f1d; color: #f7e3a0; text-align: center; padding: 15px; border-radius: 15px; border: 1px dashed #f7e3a0; margin-top: 15px; cursor: pointer; width: 100%; max-width: 400px;}
         .history-list { width: 100%; max-width: 400px; background: #2a1f1d; border-radius: 15px; padding: 10px; margin-top: 10px; max-height: 400px; overflow-y: auto; }
         .history-item { padding: 12px; border-bottom: 1px solid #553f38; font-size: 0.85rem; }
-        
         #qrcode-display { background: white; padding: 15px; border-radius: 15px; }
     </style>
 </head>
@@ -58,7 +61,28 @@
     <div class="top-owner">Owner by MD TARIFUL ISLAM</div>
     <button class="menu-btn qr-menu" onclick="openApp('qr-section')">1 : QR Code Generator</button>
     <button class="menu-btn calc-menu" onclick="openApp('calc-section')">2 : Calculator</button>
+    <button class="menu-btn video-menu" onclick="openApp('video-section')">3 : Video Player</button>
     <button class="menu-btn history-menu" onclick="showHistory()">📜 View Saved History</button>
+</div>
+
+<div id="video-section" class="app-section">
+    <div class="header-row">
+        <button class="back-btn" onclick="goHome()">← Back</button>
+        <span style="font-weight: bold; color: #d0ffda;">Video Player</span>
+    </div>
+    
+    <label for="video-upload" class="video-input-label">📁 Select Video from Storage</label>
+    <input type="file" id="video-upload" accept="video/*" style="display:none">
+
+    <div id="video-container" style="display:none;">
+        <video id="main-video-player" controls>
+            <source src="" id="video-src">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+    <div class="result-box" id="video-info" style="display:none;">
+        <p id="video-name" style="color:#f7e3a0;"></p>
+    </div>
 </div>
 
 <div id="qr-section" class="app-section">
@@ -134,7 +158,28 @@ function goHome() {
     document.getElementById('home-screen').style.display = 'flex';
     document.querySelectorAll('.app-section').forEach(s => s.style.display = 'none');
     stopScanner();
+    const video = document.getElementById('main-video-player');
+    video.pause(); // Stop video when going home
 }
+
+/* Video Player Logic */
+document.getElementById('video-upload').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const videoURL = URL.createObjectURL(file);
+        const videoPlayer = document.getElementById('main-video-player');
+        const videoSrc = document.getElementById('video-src');
+        
+        videoSrc.src = videoURL;
+        document.getElementById('video-container').style.display = 'block';
+        document.getElementById('video-info').style.display = 'block';
+        document.getElementById('video-name').innerText = "Playing: " + file.name;
+        
+        videoPlayer.load();
+        videoPlayer.play();
+        saveToHistory('Video Played', file.name);
+    }
+});
 
 /* History Core Logic */
 function saveToHistory(type, content) {
