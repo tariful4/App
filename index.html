@@ -5,27 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TARIFUL ISLAM</title>
 
+<!-- Libraries -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="https://unpkg.com/html5-qrcode"></script>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500&display=swap');
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Google Sans',sans-serif}
-body{background:#1a110f;color:#efdbd5;min-height:100vh}
-
-/* Common */
-.hidden{display:none}
-button{cursor:pointer}
+*{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif}
+body{background:#1a110f;color:#efdbd5}
 
 /* Home */
-#home{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;gap:15px}
-.menu{width:85%;max-width:400px;padding:22px;border-radius:20px;font-size:1.1rem;font-weight:bold;border:none}
+#home{height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:15px}
+.menu{width:85%;max-width:400px;padding:20px;border:none;border-radius:18px;font-size:1.1rem;font-weight:bold}
 .qr{background:#553f38;color:#fff}
-.calc{background:#8b442d;color:#fff}
 .video{background:#2e4d3c;color:#d0ffda}
-.history{background:#352d2b;color:#f7e3a0}
+.calc{background:#8b442d;color:#ffdad0}
 
-/* Section */
+/* Sections */
 .section{display:none;padding:15px}
 .header{display:flex;justify-content:space-between;margin-bottom:10px}
 .back{background:#352d2b;color:#fff;border:none;padding:8px 18px;border-radius:25px}
@@ -36,18 +31,15 @@ button{cursor:pointer}
 .result{margin-top:15px;background:#2a1f1d;padding:15px;border-radius:15px;word-break:break-all}
 
 /* Video */
-#player-wrap{display:none;background:#000;border-radius:15px;overflow:hidden}
-video{width:100%}
-.controls{display:flex;justify-content:center;gap:25px;padding:10px}
-.ctrl{font-size:1.6rem;background:none;border:none;color:white}
-.video-list{margin-top:15px}
-.video-item{padding:12px;background:#2a1f1d;margin-bottom:8px;border-radius:12px}
+#playerBox{display:none;margin-bottom:10px}
+video{width:100%;border-radius:12px}
+.video-item{padding:10px;background:#2a1f1d;border-radius:10px;margin-top:8px}
 
 /* Calculator */
 .calc-box{max-width:360px;margin:auto}
-.screen{height:100px;font-size:2.5rem;text-align:right;padding:10px}
+.screen{height:90px;font-size:2.2rem;text-align:right;padding:10px}
 .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.btn{height:65px;border-radius:50%;border:none;font-size:1.3rem}
+.btn{height:60px;border:none;border-radius:50%;font-size:1.2rem}
 .num{background:#352d2b;color:white}
 .func{background:#553f38;color:white}
 .ac{background:#8b442d;color:white}
@@ -62,19 +54,18 @@ video{width:100%}
 <button class="menu qr" onclick="openSec('qrSec')">📷 QR Tool</button>
 <button class="menu video" onclick="openSec('videoSec')">🎬 Video Player</button>
 <button class="menu calc" onclick="openSec('calcSec')">🧮 Calculator</button>
-<button class="menu history" onclick="openHistory()">📜 History</button>
 </div>
 
-<!-- QR -->
+<!-- QR TOOL -->
 <div id="qrSec" class="section">
 <div class="header">
 <button class="back" onclick="goHome()">← Back</button>
 <button class="back" onclick="openSec('scanSec')">Scan</button>
 </div>
 
-<input id="qrText" placeholder="Enter text or link"
-style="width:100%;padding:12px;border-radius:12px;background:#2a1f1d;color:white;border:2px solid #553f38"
-oninput="makeQR()">
+<input id="qrText" placeholder="Type text or link"
+oninput="makeQR()"
+style="width:100%;padding:12px;border-radius:12px;border:2px solid #553f38;background:#2a1f1d;color:white">
 
 <div id="qrBox" style="margin-top:15px;background:white;padding:15px;border-radius:15px"></div>
 </div>
@@ -92,22 +83,15 @@ oninput="makeQR()">
 <div id="videoSec" class="section">
 <div class="header"><button class="back" onclick="goHome()">← Back</button></div>
 
-<div id="player-wrap">
+<div id="playerBox">
 <video id="video" controls></video>
-<div class="controls">
-<button class="ctrl" onclick="prev()">⏮</button>
-<button class="ctrl" onclick="toggle()">▶</button>
-<button class="ctrl" onclick="next()">⏭</button>
-</div>
 </div>
 
-<input type="file" multiple accept="video/*" onchange="loadVideos(event)"
-style="margin-top:15px">
-
-<div class="video-list" id="vList"></div>
+<input type="file" multiple accept="video/*" onchange="loadVideos(event)">
+<div id="videoList"></div>
 </div>
 
-<!-- CALC -->
+<!-- CALCULATOR -->
 <div id="calcSec" class="section">
 <div class="header"><button class="back" onclick="goHome()">← Back</button></div>
 <div class="calc-box">
@@ -117,105 +101,105 @@ style="margin-top:15px">
 <button class="btn func" onclick="add('/')">÷</button>
 <button class="btn func" onclick="add('*')">×</button>
 <button class="btn num" onclick="bk()">⌫</button>
+
 <button class="btn num" onclick="add('7')">7</button>
 <button class="btn num" onclick="add('8')">8</button>
 <button class="btn num" onclick="add('9')">9</button>
 <button class="btn func" onclick="add('-')">−</button>
+
 <button class="btn num" onclick="add('4')">4</button>
 <button class="btn num" onclick="add('5')">5</button>
 <button class="btn num" onclick="add('6')">6</button>
 <button class="btn func" onclick="add('+')">+</button>
+
 <button class="btn num" onclick="add('1')">1</button>
 <button class="btn num" onclick="add('2')">2</button>
 <button class="btn num" onclick="add('3')">3</button>
 <button class="btn eq" onclick="calc()">=</button>
+
 <button class="btn num" style="grid-column:span 2;border-radius:40px" onclick="add('0')">0</button>
 <button class="btn num" onclick="add('.')">.</button>
 </div>
 </div>
 </div>
 
-<!-- HISTORY -->
-<div id="hisSec" class="section">
-<div class="header"><button class="back" onclick="goHome()">← Back</button></div>
-<div id="hisBox"></div>
-</div>
-
 <script>
-const home=document.getElementById("home");
-const secs=document.querySelectorAll(".section");
-
 /* Navigation */
 function openSec(id){
-home.style.display="none";
-secs.forEach(s=>s.style.display="none");
+document.getElementById("home").style.display="none";
+document.querySelectorAll(".section").forEach(s=>s.style.display="none");
 document.getElementById(id).style.display="block";
 if(id==="scanSec")startScan();else stopScan();
 }
 function goHome(){
-home.style.display="flex";
-secs.forEach(s=>s.style.display="none");
+document.getElementById("home").style.display="flex";
+document.querySelectorAll(".section").forEach(s=>s.style.display="none");
 stopScan();
 }
 
-/* QR */
+/* QR Generate */
 const qr=new QRCode(document.getElementById("qrBox"),{width:200,height:200});
-function makeQR(){qr.clear();if(qrText.value)qr.makeCode(qrText.value)}
+function makeQR(){
+qr.clear();
+let t=document.getElementById("qrText").value.trim();
+if(t)qr.makeCode(t);
+}
 
 /* Scanner */
-let qrScan;
+let scanner=null;
 function startScan(){
-qrScan=new Html5Qrcode("scanner");
-qrScan.start({facingMode:"environment"},{fps:10,qrbox:250},
-t=>{scanRes.innerText=t;save("QR",t);}
-);
+scanner=new Html5Qrcode("scanner");
+scanner.start({facingMode:"environment"},{fps:10,qrbox:250},
+txt=>document.getElementById("scanRes").innerText=txt
+).catch(()=>{});
 }
-function stopScan(){if(qrScan?.isScanning)qrScan.stop()}
-imgQR.onchange=e=>{
-let f=e.target.files[0];if(!f)return;
-qrScan.scanFile(f,true).then(t=>{scanRes.innerText=t;save("QR",t)})
-.catch(()=>scanRes.innerText="❌ Detect হয়নি");
+function stopScan(){
+if(scanner&&scanner.isScanning)scanner.stop().catch(()=>{});
 }
+document.getElementById("imgQR").addEventListener("change",e=>{
+let f=e.target.files[0];
+if(!f)return;
+if(!scanner)scanner=new Html5Qrcode("scanner");
+scanner.scanFile(f,true)
+.then(t=>document.getElementById("scanRes").innerText=t)
+.catch(()=>document.getElementById("scanRes").innerText="❌ QR detect হয়নি");
+});
 
 /* Video */
-let vids=[],i=0;
+let videos=[],idx=0;
 function loadVideos(e){
-vids=[...e.target.files];
-vList.innerHTML="";
-vids.forEach((v,idx)=>{
+videos=[...e.target.files];
+let list=document.getElementById("videoList");
+list.innerHTML="";
+videos.forEach((v,i)=>{
 let d=document.createElement("div");
 d.className="video-item";
 d.innerText=v.name;
-d.onclick=()=>play(idx);
-vList.appendChild(d);
+d.onclick=()=>playVideo(i);
+list.appendChild(d);
 });
 }
-function play(x){
-i=x;
-video.src=URL.createObjectURL(vids[i]);
-player-wrap.style.display="block";
-video.play();
-save("Video",vids[i].name);
+function playVideo(i){
+idx=i;
+let v=document.getElementById("video");
+v.src=URL.createObjectURL(videos[i]);
+document.getElementById("playerBox").style.display="block";
+v.play();
 }
-function toggle(){video.paused?video.play():video.pause()}
-function next(){if(i<vids.length-1)play(i+1)}
-function prev(){if(i>0)play(i-1)}
 
 /* Calculator */
-function add(v){disp.innerText=disp.innerText==="0"?v:disp.innerText+v}
-function clr(){disp.innerText="0"}
-function bk(){disp.innerText=disp.innerText.length>1?disp.innerText.slice(0,-1):"0"}
-function calc(){try{disp.innerText=eval(disp.innerText)}catch{disp.innerText="Error"}}
-
-/* History */
-function save(t,c){
-let h=JSON.parse(localStorage.getItem("his")||"[]");
-h.unshift(t+": "+c);
-localStorage.setItem("his",JSON.stringify(h.slice(0,20)));
+function add(v){
+let d=document.getElementById("disp");
+d.innerText=d.innerText==="0"?v:d.innerText+v;
 }
-function openHistory(){
-openSec("hisSec");
-hisBox.innerHTML=(JSON.parse(localStorage.getItem("his")||"[]")).join("<br>")||"Empty";
+function clr(){document.getElementById("disp").innerText="0";}
+function bk(){
+let d=document.getElementById("disp");
+d.innerText=d.innerText.length>1?d.innerText.slice(0,-1):"0";
+}
+function calc(){
+let d=document.getElementById("disp");
+try{d.innerText=eval(d.innerText);}catch{d.innerText="Error";}
 }
 </script>
 
