@@ -3,13 +3,67 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TARIFUL 2.0</title>
+<title>TARIFUL 2.0 - Secure App</title>
 
 <style>
+/* --- General Styles --- */
 *{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif}
 body{background:#1a110f;color:#efdbd5;overflow-x:hidden}
 
-/* Home Screen */
+/* --- Login & Registration Section --- */
+#authSection {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #1a110f 0%, #2a1f1d 100%);
+}
+.auth-box {
+    background: #2a1f1d;
+    padding: 30px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 360px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    text-align: center;
+    border: 1px solid #3e2e2a;
+}
+.auth-box h2 { color: #d0ffda; margin-bottom: 20px; }
+.auth-input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 10px;
+    border: 1px solid #553f38;
+    background: #1a110f;
+    color: white;
+    outline: none;
+}
+.auth-btn {
+    width: 100%;
+    padding: 12px;
+    background: #8b442d;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: 0.3s;
+}
+.auth-btn:hover { background: #a65236; }
+.toggle-link {
+    margin-top: 15px;
+    font-size: 0.85rem;
+    color: #d0ffda;
+    cursor: pointer;
+    display: block;
+    text-decoration: underline;
+}
+
+/* --- Main Project (Initially Hidden) --- */
+#mainApp { display: none; }
+
 #home{height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:15px}
 .owner-text { font-size: 0.8rem; color: #8b442d; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; margin-bottom: -10px; }
 .main-title { color:#d0ffda; margin-bottom: 25px; font-size: 2.2rem; }
@@ -24,26 +78,20 @@ body{background:#1a110f;color:#efdbd5;overflow-x:hidden}
 .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
 .back{background:#352d2b;color:#fff;border:none;padding:8px 18px;border-radius:25px;cursor:pointer}
 
-/* Media Player & Audio Toggle */
+/* Media Player */
 #playerBox{display:none;background:#000;border-radius:15px;overflow:hidden;margin-bottom:10px;position:relative}
 video{width:100%;max-height:50vh;display:block;cursor:pointer}
-
 .audio-toggle-container { display: flex; justify-content: flex-end; margin-bottom: 10px; }
 .audio-toggle-box { background: #2a1f1d; padding: 8px 15px; border-radius: 20px; font-size: 0.8rem; display: flex; align-items: center; gap: 8px; border: 1px solid #553f38; }
-
 .audio-mode video { height: 0; opacity: 0; }
 .audio-visualizer { display: none; padding: 50px; text-align: center; background: #2a1f1d; color: #d0ffda; font-weight: bold; }
 .audio-mode .audio-visualizer { display: block; }
-
-/* Control System */
 .controls{display:flex;justify-content:center;align-items:center;gap:12px;padding:15px;background:#2a1f1d}
 .btn-ctrl{background:#352d2b;color:white;border:none;width:45px;height:45px;border-radius:50%;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center}
 .btn-stop{background:#8b442d}
-
-/* Loop Button */
 #loopBtn { position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.6); color: white; border: none; padding: 5px 10px; border-radius: 15px; font-size: 0.7rem; display: none; cursor: pointer; z-index: 10; border: 1px solid #d0ffda; }
 
-/* Calculator & History (No Changes) */
+/* Calculator */
 .calc-box{max-width:360px;margin:auto}
 .screen{height:90px;font-size:2.2rem;text-align:right;padding:10px;background:#2a1f1d;border-radius:15px;margin-bottom:15px;overflow:hidden}
 .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
@@ -55,88 +103,150 @@ video{width:100%;max-height:50vh;display:block;cursor:pointer}
 .hist-btn-main{background:#8b442d;color:#fff;border:none;padding:8px 20px;border-radius:20px;font-weight:bold;cursor:pointer}
 #historyPanel{display:none;margin-top:20px;max-width:360px;margin:auto;background:#2a1f1d;padding:15px;border-radius:15px}
 .hist-item{padding:8px 0;border-bottom:1px solid #352d2b}
-
 .video-item{padding:12px;background:#2a1f1d;border-radius:10px;margin-top:8px;cursor:pointer; font-size: 0.9rem}
 </style>
 </head>
 
 <body>
 
-<div id="home">
-    <p class="owner-text">Owner by TARIFUL ISLAM</p>
-    <h1 class="main-title">TARIFUL 2.0</h1>
-    <button class="menu video" onclick="openSec('videoSec')">🎬 Media Player</button>
-    <button class="menu calc" onclick="openSec('calcSec')">🧮 Calculator</button>
+<div id="authSection">
+    <div class="auth-box" id="loginBox">
+        <h2>TARIFUL 2.0 Login</h2>
+        <input type="text" id="lUser" class="auth-input" placeholder="Username">
+        <input type="password" id="lPass" class="auth-input" placeholder="Password">
+        <button class="auth-btn" onclick="handleLogin()">Login</button>
+        <span class="toggle-link" onclick="toggleAuth()">New User? Register here</span>
+    </div>
+
+    <div class="auth-box" id="regBox" style="display:none">
+        <h2>Create Account</h2>
+        <input type="text" id="rUser" class="auth-input" placeholder="Choose Username">
+        <input type="password" id="rPass" class="auth-input" placeholder="Set Password">
+        <button class="auth-btn" onclick="handleRegister()">Register</button>
+        <span class="toggle-link" onclick="toggleAuth()">Already have account? Login</span>
+    </div>
 </div>
 
-<div id="videoSec" class="section">
-    <div class="header">
-        <button class="back" onclick="goHome()">← Back</button>
-        <h3 style="color:#d0ffda">Media Player</h3>
+<div id="mainApp">
+    <div id="home">
+        <p class="owner-text">Owner by TARIFUL ISLAM</p>
+        <h1 class="main-title">TARIFUL 2.0</h1>
+        <button class="menu video" onclick="openSec('videoSec')">🎬 Media Player</button>
+        <button class="menu calc" onclick="openSec('calcSec')">🧮 Calculator</button>
+        <button onclick="logout()" style="margin-top:30px; background:none; border:1px solid #8b442d; color:#8b442d; padding:8px 20px; border-radius:15px; cursor:pointer">Logout</button>
     </div>
 
-    <div class="audio-toggle-container">
-        <div class="audio-toggle-box">
-            <span>Audio Mode</span>
-            <input type="checkbox" id="audioToggle" onchange="toggleAudioMode()">
+    <div id="videoSec" class="section">
+        <div class="header">
+            <button class="back" onclick="goHome()">← Back</button>
+            <h3 style="color:#d0ffda">Media Player</h3>
         </div>
+        <div class="audio-toggle-container">
+            <div class="audio-toggle-box">
+                <span>Audio Mode</span>
+                <input type="checkbox" id="audioToggle" onchange="toggleAudioMode()">
+            </div>
+        </div>
+        <div id="playerBox">
+            <button id="loopBtn" onclick="toggleLoop()">Loop: OFF</button>
+            <div class="audio-visualizer">🎵 Playing in Background</div>
+            <video id="mainMedia" playsinline onclick="showLoop()"></video>
+            <div class="controls">
+                <button class="btn-ctrl" onclick="prev()">⏮</button>
+                <button class="btn-ctrl" onclick="togglePlay()" id="pBtn">▶</button>
+                <button class="btn-ctrl" onclick="stopMedia()" class="btn-ctrl btn-stop">⏹</button>
+                <button class="btn-ctrl" onclick="next()">⏭</button>
+            </div>
+        </div>
+        <input type="file" id="fileInput" multiple accept="video/*,audio/*" onchange="handleFiles(event)" style="margin-bottom:15px">
+        <div id="videoList"></div>
     </div>
 
-    <div id="playerBox">
-        <button id="loopBtn" onclick="toggleLoop()">Loop: OFF</button>
-        <div class="audio-visualizer">🎵 Playing in Background</div>
-        <video id="mainMedia" playsinline onclick="showLoop()"></video>
-        
-        <div class="controls">
-            <button class="btn-ctrl" onclick="prev()">⏮</button>
-            <button class="btn-ctrl" onclick="togglePlay()" id="pBtn">▶</button>
-            <button class="btn-ctrl" onclick="stopMedia()" class="btn-ctrl btn-stop">⏹</button>
-            <button class="btn-ctrl" onclick="next()">⏭</button>
+    <div id="calcSec" class="section">
+        <div class="header">
+            <button class="back" onclick="goHome()">← Back</button>
+            <button class="hist-btn-main" onclick="toggleHistory()">History 🕒</button>
         </div>
-    </div>
-
-    <input type="file" id="fileInput" multiple accept="video/*,audio/*" onchange="handleFiles(event)" style="margin-bottom:15px">
-    <div id="videoList"></div>
-</div>
-
-<div id="calcSec" class="section">
-    <div class="header">
-        <button class="back" onclick="goHome()">← Back</button>
-        <button class="hist-btn-main" onclick="toggleHistory()">History 🕒</button>
-    </div>
-    <div class="calc-box">
-        <div class="screen" id="disp">0</div>
-        <div class="grid">
-            <button class="btn ac" onclick="clr()">AC</button>
-            <button class="btn func" onclick="add('/')">÷</button>
-            <button class="btn func" onclick="add('*')">×</button>
-            <button class="btn num" onclick="bk()">⌫</button>
-            <button class="btn num" onclick="add('7')">7</button>
-            <button class="btn num" onclick="add('8')">8</button>
-            <button class="btn num" onclick="add('9')">9</button>
-            <button class="btn func" onclick="add('-')">−</button>
-            <button class="btn num" onclick="add('4')">4</button>
-            <button class="btn num" onclick="add('5')">5</button>
-            <button class="btn num" onclick="add('6')">6</button>
-            <button class="btn func" onclick="add('+')">+</button>
-            <button class="btn num" onclick="add('1')">1</button>
-            <button class="btn num" onclick="add('2')">2</button>
-            <button class="btn num" onclick="add('3')">3</button>
-            <button class="btn eq" onclick="calc()">=</button>
-            <button class="btn num" style="grid-column:span 2;border-radius:40px" onclick="add('0')">0</button>
-            <button class="btn num" onclick="add('.')">.</button>
+        <div class="calc-box">
+            <div class="screen" id="disp">0</div>
+            <div class="grid">
+                <button class="btn ac" onclick="clr()">AC</button>
+                <button class="btn func" onclick="add('/')">÷</button>
+                <button class="btn func" onclick="add('*')">×</button>
+                <button class="btn num" onclick="bk()">⌫</button>
+                <button class="btn num" onclick="add('7')">7</button>
+                <button class="btn num" onclick="add('8')">8</button>
+                <button class="btn num" onclick="add('9')">9</button>
+                <button class="btn func" onclick="add('-')">−</button>
+                <button class="btn num" onclick="add('4')">4</button>
+                <button class="btn num" onclick="add('5')">5</button>
+                <button class="btn num" onclick="add('6')">6</button>
+                <button class="btn func" onclick="add('+')">+</button>
+                <button class="btn num" onclick="add('1')">1</button>
+                <button class="btn num" onclick="add('2')">2</button>
+                <button class="btn num" onclick="add('3')">3</button>
+                <button class="btn eq" onclick="calc()">=</button>
+                <button class="btn num" style="grid-column:span 2;border-radius:40px" onclick="add('0')">0</button>
+                <button class="btn num" onclick="add('.')">.</button>
+            </div>
         </div>
-    </div>
-    <div id="historyPanel">
-        <div style="display:flex;justify-content:space-between;margin-bottom:10px">
-            <span>Saved History</span>
-            <button onclick="clearHistory()" style="background:none;border:none;color:#ff8b8b;cursor:pointer">Clear</button>
+        <div id="historyPanel">
+            <div style="display:flex;justify-content:space-between;margin-bottom:10px">
+                <span>Your Saved History</span>
+                <button onclick="clearHistory()" style="background:none;border:none;color:#ff8b8b;cursor:pointer">Clear</button>
+            </div>
+            <div id="histList"></div>
         </div>
-        <div id="histList"></div>
     </div>
 </div>
 
 <script>
+/* --- Authentication Logic --- */
+let loggedInUser = "";
+
+function toggleAuth() {
+    const lBox = document.getElementById("loginBox");
+    const rBox = document.getElementById("regBox");
+    lBox.style.display = lBox.style.display === "none" ? "block" : "none";
+    rBox.style.display = rBox.style.display === "none" ? "block" : "none";
+}
+
+function handleRegister() {
+    const user = document.getElementById("rUser").value.trim();
+    const pass = document.getElementById("rPass").value.trim();
+    
+    if(user && pass) {
+        if(localStorage.getItem("u_" + user)) {
+            alert("Username already exists!");
+        } else {
+            localStorage.setItem("u_" + user, pass);
+            alert("Registration Successful! Please Login.");
+            toggleAuth();
+        }
+    } else {
+        alert("Please enter both fields.");
+    }
+}
+
+function handleLogin() {
+    const user = document.getElementById("lUser").value.trim();
+    const pass = document.getElementById("lPass").value.trim();
+    
+    const storedPass = localStorage.getItem("u_" + user);
+    if(storedPass && storedPass === pass) {
+        loggedInUser = user;
+        document.getElementById("authSection").style.display = "none";
+        document.getElementById("mainApp").style.display = "block";
+    } else {
+        alert("Invalid Username or Password!");
+    }
+}
+
+function logout() {
+    location.reload();
+}
+
+/* --- Media Player Logic --- */
 const media = document.getElementById("mainMedia");
 const loopBtn = document.getElementById("loopBtn");
 let queue = [];
@@ -149,6 +259,7 @@ function openSec(id){
     document.getElementById(id).style.display="block";
     if(id==='calcSec') renderHistory();
 }
+
 function goHome(){
     document.getElementById("home").style.display="flex";
     document.querySelectorAll(".section").forEach(s=>s.style.display="none");
@@ -159,55 +270,48 @@ function handleFiles(e) {
     renderList();
     play(0);
 }
+
 function renderList() {
     const list = document.getElementById("videoList");
     list.innerHTML = queue.map((f, i) => `<div class="video-item" onclick="play(${i})">${i+1}. ${f.name}</div>`).join('');
 }
+
 function play(index) {
     if (index < 0 || index >= queue.length) return;
     currentIdx = index;
     media.src = URL.createObjectURL(queue[index]);
     document.getElementById("playerBox").style.display = "block";
-    media.loop = isLooping; // Loop status load hobe
+    media.loop = isLooping;
     media.play();
     document.getElementById("pBtn").innerText = "⏸";
 }
+
 function togglePlay() { media.paused ? (media.play(), document.getElementById("pBtn").innerText = "⏸") : (media.pause(), document.getElementById("pBtn").innerText = "▶"); }
 function stopMedia() { media.pause(); media.currentTime = 0; document.getElementById("pBtn").innerText = "▶"; }
 function next() { if(currentIdx < queue.length-1) play(currentIdx + 1); else play(0); }
 function prev() { if(currentIdx > 0) play(currentIdx - 1); }
 function toggleAudioMode() { document.getElementById("playerBox").classList.toggle("audio-mode", document.getElementById("audioToggle").checked); }
 
-/* Loop Fix */
 function showLoop() {
     loopBtn.style.display = "block";
-    // 4 second por auto hide hobe jodi Loop OFF thake
-    if(!isLooping) {
-        setTimeout(() => { if(!isLooping) loopBtn.style.display = "none"; }, 4000);
-    }
+    if(!isLooping) setTimeout(() => { if(!isLooping) loopBtn.style.display = "none"; }, 4000);
 }
 
 function toggleLoop() {
     isLooping = !isLooping;
-    media.loop = isLooping; // Media element-e loop set kora holo
+    media.loop = isLooping;
     loopBtn.innerText = isLooping ? "Loop: ON" : "Loop: OFF";
     loopBtn.style.background = isLooping ? "#2e4d3c" : "rgba(0,0,0,0.6)";
     if(!isLooping) setTimeout(() => { loopBtn.style.display = "none"; }, 1000);
 }
 
-// Jodi Loop OFF thake tobei auto-next hobe
-media.onended = () => { 
-    if(!isLooping) {
-        next(); 
-    }
-};
+media.onended = () => { if(!isLooping) next(); };
 
-document.addEventListener("visibilitychange", () => { if(document.hidden && !media.paused) media.play(); });
-
-/* Calculator (Original) */
+/* --- Calculator & User-Specific History Logic --- */
 function add(v){ let d=document.getElementById("disp"); d.innerText = d.innerText==="0" ? v : d.innerText+v; }
 function clr(){ document.getElementById("disp").innerText="0"; }
 function bk(){ let d=document.getElementById("disp"); d.innerText = d.innerText.length>1 ? d.innerText.slice(0,-1) : "0"; }
+
 function calc(){
     let d=document.getElementById("disp");
     try {
@@ -216,18 +320,32 @@ function calc(){
         d.innerText = res;
     } catch { d.innerText = "Error"; }
 }
+
 function toggleHistory(){ let p = document.getElementById("historyPanel"); p.style.display = p.style.display==='block' ? 'none' : 'block'; }
+
 function saveHistory(item){
-    let h = JSON.parse(localStorage.getItem("calc_h") || "[]");
+    // Prottek user er alada history save korbe
+    const historyKey = "h_" + loggedInUser;
+    let h = JSON.parse(localStorage.getItem(historyKey) || "[]");
     h.unshift(item);
-    localStorage.setItem("calc_h", JSON.stringify(h.slice(0,20)));
+    localStorage.setItem(historyKey, JSON.stringify(h.slice(0,20)));
     renderHistory();
 }
+
 function renderHistory(){
-    let h = JSON.parse(localStorage.getItem("calc_h") || "[]");
-    document.getElementById("histList").innerHTML = h.map(i => `<div class="hist-item">${i}</div>`).join('');
+    const historyKey = "h_" + loggedInUser;
+    let h = JSON.parse(localStorage.getItem(historyKey) || "[]");
+    document.getElementById("histList").innerHTML = h.length > 0 ? 
+        h.map(i => `<div class="hist-item">${i}</div>`).join('') : 
+        `<div style="font-size:0.8rem; color:#888">No history found for ${loggedInUser}</div>`;
 }
-function clearHistory(){ localStorage.removeItem("calc_h"); renderHistory(); }
+
+function clearHistory(){ 
+    const historyKey = "h_" + loggedInUser;
+    localStorage.removeItem(historyKey); 
+    renderHistory(); 
+}
 </script>
+
 </body>
 </html>
