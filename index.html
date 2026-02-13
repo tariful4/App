@@ -5,34 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TARIFUL2.0</title>
     <style>
-        /* মূল স্টাইল - স্ক্রিনশটের থিম অনুযায়ী */
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        /* মূল স্টাইল */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body { background: #1a110f; color: #efdbd5; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
 
-        /* অথেন্টিকেশন সেকশন */
-        #authSection { width: 100%; display: flex; justify-content: center; }
+        /* অথেন্টিকেশন বক্স */
         .auth-box { background: #2a1f1d; padding: 30px; border-radius: 25px; width: 90%; max-width: 360px; text-align: center; border: 1px solid #3e2e2a; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .auth-input { width: 100%; padding: 15px; margin: 10px 0; border-radius: 12px; border: 1px solid #553f38; background: #1a110f; color: white; outline: none; }
-        .auth-btn { width: 100%; padding: 15px; background: #8b442d; color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .auth-btn { width: 100%; padding: 15px; background: #8b442d; color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; }
         
-        /* মেইন অ্যাপ এবং ক্যালকুলেটর ডিজাইন */
+        /* ড্যাশবোর্ড মেনু স্টাইল */
+        #dashboard { text-align: center; width: 100%; max-width: 360px; display: none; }
+        .menu-card { 
+            background: #2a1f1d; padding: 25px; margin: 15px 0; border-radius: 20px; 
+            border: 1px solid #3e2e2a; cursor: pointer; transition: 0.3s;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .menu-card:hover { transform: translateY(-5px); background: #352825; border-color: #8b442d; }
+        .menu-card h3 { color: #f7e3a0; font-size: 1.3rem; }
+        .menu-icon { font-size: 1.8rem; }
+
+        /* ক্যালকুলেটর ও নোটবুক সেকশন */
         #mainApp { width: 100%; max-width: 400px; padding: 20px; display: none; }
-        .screen { height: 180px; display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-end; padding: 20px; font-size: 3.5rem; color: white; overflow: hidden; word-break: break-all; }
-        
-        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
-        .btn { height: 75px; width: 75px; border: none; border-radius: 50%; font-size: 1.6rem; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: brightness 0.2s; }
-        .btn:active { filter: brightness(1.2); }
+        .screen { height: 120px; display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-end; padding: 20px; font-size: 2.5rem; color: white; overflow: hidden; }
+        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .btn { height: 70px; width: 70px; border: none; border-radius: 50%; font-size: 1.4rem; cursor: pointer; }
+        .num { background: #352d2b; color: white; }
+        .op { background: #4a3a37; color: #f7e3a0; }
+        .ac { background: #7c3a25; color: white; }
+        .eq { background: #f7e3a0; color: #3e2e00; border-radius: 35px; }
 
-        /* বাটন কালার কোড (আপনার স্ক্রিনশট অনুযায়ী) */
-        .num { background: #352d2b; color: white; } /* সংখ্যা বাটন */
-        .op { background: #4a3a37; color: #f7e3a0; } /* অপারেটর বাটন */
-        .ac { background: #7c3a25; color: white; } /* AC বাটন */
-        .eq { background: #f7e3a0; color: #3e2e00; border-radius: 40px; } /* সমান বাটন */
-
-        #historyPanel { margin-top: 25px; background: #2a1f1d; padding: 15px; border-radius: 20px; max-height: 150px; overflow-y: auto; font-size: 0.9rem; }
-        .hist-item { padding: 8px 0; border-bottom: 1px solid #3e2e2a; color: #bcaea9; }
+        /* নোটবুক ইনপুট */
+        .note-area { width: 100%; height: 150px; background: #2a1f1d; border: 1px solid #3e2e2a; border-radius: 15px; padding: 15px; color: white; margin-bottom: 15px; resize: none; outline: none; }
+        .nav-btn { background: #352d2b; color: white; border: none; padding: 8px 15px; border-radius: 15px; margin-bottom: 15px; cursor: pointer; }
         
-        .nav-btn { background: #352d2b; color: white; border: none; padding: 10px 20px; border-radius: 20px; margin-bottom: 15px; cursor: pointer; }
+        #historyPanel, #notesDisplay { margin-top: 20px; max-height: 200px; overflow-y: auto; text-align: left; }
+        .data-item { padding: 10px; border-bottom: 1px solid #3e2e2a; color: #bcaea9; font-size: 0.85rem; }
     </style>
 </head>
 <body>
@@ -47,48 +55,64 @@
     </div>
 </div>
 
-<div id="mainApp">
-    <div id="home" style="text-align:center; padding: 50px 0;">
-        <h1 style="color:#f7e3a0; font-size: 2.5rem;">Welcome</h1>
-        <p style="color: #bcaea9; margin-top: 10px;">Cloud Calculator System</p>
-        <button onclick="openCalc()" style="width:100%; padding:20px; margin-top:40px; background:#8b442d; color:white; border-radius:15px; border:none; font-size:1.2rem; font-weight:bold; cursor:pointer;">🧮 Start Calculating</button>
-        <button onclick="location.reload()" style="margin-top:20px; background:none; border:none; color:#7c3a25; cursor:pointer;">Logout</button>
+<div id="dashboard">
+    <h2 style="margin-bottom: 10px;">Welcome, <span id="displayUser" style="color:#f7e3a0;">User</span></h2>
+    <p style="color:#bcaea9; margin-bottom: 30px;">Choose a Service</p>
+    
+    <div class="menu-card" onclick="showApp('calcSec')">
+        <div>
+            <h3>Calculator</h3>
+            <p style="font-size: 0.8rem; color:#bcaea9;">Cloud Sync History</p>
+        </div>
+        <div class="menu-icon">🧮</div>
     </div>
 
+    <div class="menu-card" onclick="showApp('noteSec')">
+        <div>
+            <h3>Note Book</h3>
+            <p style="font-size: 0.8rem; color:#bcaea9;">Safe & Private Notes</p>
+        </div>
+        <div class="menu-icon">📝</div>
+    </div>
+
+    <button onclick="location.reload()" style="margin-top:30px; background:none; border:none; color:#7c3a25; cursor:pointer; font-weight:bold;">LOGOUT</button>
+</div>
+
+<div id="mainApp">
     <div id="calcSec" style="display:none;">
-        <button onclick="goHome()" class="nav-btn">← Home</button>
+        <button onclick="backToDash()" class="nav-btn">← Back to Menu</button>
         <div class="screen" id="disp">0</div>
-        
         <div class="grid">
             <button class="btn ac" onclick="clr()">AC</button>
-            <button class="btn op" onclick="add('(')">( )</button>
-            <button class="btn op" onclick="add('%')">%</button>
+            <button class="btn op" onclick="add('(')">(</button>
+            <button class="btn op" onclick="add(')')">)</button>
             <button class="btn op" onclick="add('/')">÷</button>
-
             <button class="btn num" onclick="add('7')">7</button>
             <button class="btn num" onclick="add('8')">8</button>
             <button class="btn num" onclick="add('9')">9</button>
             <button class="btn op" onclick="add('*')">×</button>
-
-            <button class="btn num" onclick="add('4')">4</button>
-            <button class="btn num" onclick="add('5')">5</button>
-            <button class="btn num" onclick="add('6')">6</button>
-            <button class="btn op" onclick="add('-')">−</button>
-
             <button class="btn num" onclick="add('1')">1</button>
             <button class="btn num" onclick="add('2')">2</button>
             <button class="btn num" onclick="add('3')">3</button>
             <button class="btn op" onclick="add('+')">+</button>
-
             <button class="btn num" onclick="add('0')">0</button>
             <button class="btn num" onclick="add('.')">.</button>
             <button class="btn num" onclick="bk()">⌫</button>
             <button class="btn eq" onclick="runCalc()">=</button>
         </div>
-
         <div id="historyPanel">
-            <p style="color:#f7e3a0; font-weight:bold; margin-bottom:10px; font-size:0.8rem;">RECENT HISTORY</p>
-            <div id="histList">Loading cloud data...</div>
+            <p style="color:#f7e3a0; font-size:0.7rem; margin-bottom:5px;">RECENT CLOUD HISTORY</p>
+            <div id="histList"></div>
+        </div>
+    </div>
+
+    <div id="noteSec" style="display:none;">
+        <button onclick="backToDash()" class="nav-btn">← Back to Menu</button>
+        <textarea id="noteInput" class="note-area" placeholder="Write your note here..."></textarea>
+        <button onclick="saveNote()" class="auth-btn" id="noteSaveBtn">Save Note</button>
+        <div id="notesDisplay">
+            <p style="color:#f7e3a0; font-size:0.7rem; margin:15px 0 5px 0;">YOUR SAVED NOTES</p>
+            <div id="notesList"></div>
         </div>
     </div>
 </div>
@@ -97,7 +121,6 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, doc, setDoc, getDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // আপনার অরিজিনাল ডাটাবেস কনফিগ
     const firebaseConfig = {
         apiKey: "AIzaSyA2T1xkIsdNh7UyT6dTgKHYGCEgEVQ4bj0",
         authDomain: "my-social-project-73e01.firebaseapp.com",
@@ -105,7 +128,6 @@
         storageBucket: "my-social-project-73e01.firebasestorage.app",
         messagingSenderId: "944631362614",
         appId: "1:944631362614:web:ef49c81e235125a6db9497",
-        measurementId: "G-ER6LWM02Q7"
     };
 
     const app = initializeApp(firebaseConfig);
@@ -114,17 +136,17 @@
     let currentUsername = "";
     let isLoginMode = true;
 
+    // লগইন ও রেজিস্ট্রেশন লজিক
     window.toggleAuth = () => {
         isLoginMode = !isLoginMode;
-        document.getElementById("authTitle").innerText = isLoginMode ? "TARIFUL 2.0" : "New Account";
+        document.getElementById("authTitle").innerText = isLoginMode ? "TARIFUL 2.0" : "Create Account";
         document.getElementById("submitBtn").innerText = isLoginMode ? "Login" : "Register";
-        document.getElementById("toggleMsg").innerText = isLoginMode ? "New User? Register here" : "Back to Login";
     };
 
     document.getElementById("submitBtn").onclick = async () => {
-        const user = document.getElementById("userInput").value.trim();
+        const user = document.getElementById("userInput").value.trim().toUpperCase();
         const pass = document.getElementById("passInput").value.trim();
-        if(!user || !pass) return alert("Please fill all fields!");
+        if(!user || !pass) return alert("Fill all fields");
 
         const userRef = doc(db, "users", user);
         const snap = await getDoc(userRef);
@@ -132,72 +154,76 @@
         if(isLoginMode) {
             if(snap.exists() && snap.data().password === pass) {
                 currentUsername = user;
-                loginSuccess();
-            } else alert("Invalid Login!");
+                startApp();
+            } else alert("Wrong Password/User!");
         } else {
-            if(snap.exists()) alert("Username taken!");
+            if(snap.exists()) alert("User already exists!");
             else {
-                await setDoc(userRef, { password: pass, history: [] });
-                alert("Account Created!");
+                await setDoc(userRef, { password: pass, history: [], notes: [] });
+                alert("Account Created! Now Login.");
                 toggleAuth();
             }
         }
     };
 
-    function loginSuccess() {
+    function startApp() {
         document.getElementById("authSection").style.display = "none";
-        document.getElementById("mainApp").style.display = "block";
-        loadHistory();
+        document.getElementById("dashboard").style.display = "block";
+        document.getElementById("displayUser").innerText = currentUsername;
+        loadCloudData();
     }
 
-    window.saveToCloud = async (log) => {
-        if(!currentUsername) return;
-        const userRef = doc(db, "users", currentUsername);
-        await updateDoc(userRef, { history: arrayUnion(log) });
-        loadHistory();
+    // অ্যাপ সুইচ করা
+    window.showApp = (id) => {
+        document.getElementById("dashboard").style.display = "none";
+        document.getElementById("mainApp").style.display = "block";
+        document.getElementById("calcSec").style.display = (id === 'calcSec') ? 'block' : 'none';
+        document.getElementById("noteSec").style.display = (id === 'noteSec') ? 'block' : 'none';
     };
 
-    async function loadHistory() {
-        const userRef = doc(db, "users", currentUsername);
-        const snap = await getDoc(userRef);
-        const h = snap.data().history || [];
-        document.getElementById("histList").innerHTML = h.slice(-8).reverse().map(i => `<div class="hist-item">${i}</div>`).join("");
+    window.backToDash = () => {
+        document.getElementById("mainApp").style.display = "none";
+        document.getElementById("dashboard").style.display = "block";
+    };
+
+    // ডাটা সেভ এবং লোড
+    window.saveToCloud = async (log) => {
+        await updateDoc(doc(db, "users", currentUsername), { history: arrayUnion(log) });
+        loadCloudData();
+    };
+
+    window.saveNote = async () => {
+        const txt = document.getElementById("noteInput").value.trim();
+        if(!txt) return;
+        document.getElementById("noteSaveBtn").innerText = "Saving...";
+        await updateDoc(doc(db, "users", currentUsername), { notes: arrayUnion(txt) });
+        document.getElementById("noteInput").value = "";
+        document.getElementById("noteSaveBtn").innerText = "Save Note";
+        loadCloudData();
+    };
+
+    async function loadCloudData() {
+        const snap = await getDoc(doc(db, "users", currentUsername));
+        const data = snap.data();
+        
+        document.getElementById("histList").innerHTML = (data.history || []).slice(-5).reverse().map(i => `<div class="data-item">${i}</div>`).join("");
+        document.getElementById("notesList").innerHTML = (data.notes || []).slice().reverse().map(i => `<div class="data-item">📌 ${i}</div>`).join("");
     }
 </script>
 
 <script>
-    // ক্যালকুলেটর লজিক
-    let disp = document.getElementById("disp");
-
-    function add(v) {
-        if(disp.innerText === "0" || disp.innerText === "Error") disp.innerText = v;
-        else disp.innerText += v;
-    }
-
-    function clr() { disp.innerText = "0"; }
-    
-    function bk() {
-        disp.innerText = disp.innerText.length > 1 ? disp.innerText.slice(0, -1) : "0";
-    }
-
+    // ক্যালকুলেটর ফাংশন
+    let d = document.getElementById("disp");
+    function add(v) { d.innerText = (d.innerText === "0") ? v : d.innerText + v; }
+    function clr() { d.innerText = "0"; }
+    function bk() { d.innerText = d.innerText.length > 1 ? d.innerText.slice(0,-1) : "0"; }
     async function runCalc() {
         try {
-            let expression = disp.innerText.replace(/×/g, '*').replace(/÷/g, '/');
-            let result = eval(expression);
-            let log = disp.innerText + " = " + result;
-            disp.innerText = result;
-            if(window.saveToCloud) await window.saveToCloud(log);
-        } catch { disp.innerText = "Error"; }
-    }
-
-    function openCalc() {
-        document.getElementById("home").style.display = "none";
-        document.getElementById("calcSec").style.display = "block";
-    }
-
-    function goHome() {
-        document.getElementById("calcSec").style.display = "none";
-        document.getElementById("home").style.display = "block";
+            let res = eval(d.innerText.replace(/×/g, '*').replace(/÷/g, '/'));
+            let log = d.innerText + " = " + res;
+            d.innerText = res;
+            if(window.saveToCloud) window.saveToCloud(log);
+        } catch { d.innerText = "Error"; }
     }
 </script>
 
