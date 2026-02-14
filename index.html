@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TARIFUL 2.0</title>
+    <title>TARIFUL 2.0 - Pro</title>
     <style>
         :root {
             --bg-color: #1a110f;
@@ -25,8 +25,16 @@
         /* Auth & Dashboard Boxes */
         .auth-box, .dashboard-box, .app-box { 
             background: var(--card-bg); padding: 25px; border-radius: 28px; 
-            margin-top: 50px; text-align: center; border: 1px solid #3e2e2a; 
+            margin-top: 30px; text-align: center; border: 1px solid #3e2e2a; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
+
+        .owner-info {
+            margin-bottom: 20px; padding-bottom: 15px; 
+            border-bottom: 1px dashed #553f38; line-height: 1.6;
+        }
+        .owner-info h4 { color: #e9e29c; font-size: 1.1rem; text-transform: uppercase; }
+        .owner-info p { font-size: 0.85rem; color: #bcaea9; }
 
         .auth-input { 
             width: 100%; padding: 15px; margin: 10px 0; border-radius: 15px; 
@@ -37,6 +45,8 @@
             width: 100%; padding: 15px; background: var(--accent); color: white; 
             border: none; border-radius: 15px; font-weight: bold; cursor: pointer; margin-top: 10px; 
         }
+
+        .reset-link { color: #ff8a80; font-size: 0.8rem; cursor: pointer; display: block; margin-top: 15px; text-decoration: underline; }
 
         /* Calculator UI */
         .calc-header { display: flex; justify-content: space-between; padding: 10px; color: #bcaea9; margin-bottom: 10px; }
@@ -59,7 +69,7 @@
         .btn-num { background: var(--num-btn); color: #efdbd5; }
         .btn-eq { background: var(--eq-btn); color: var(--eq-text); border-radius: 35px; }
 
-        /* List Items (History & Notes) */
+        /* List Items */
         .list-item { 
             background: #251a17; padding: 12px; border-radius: 12px; 
             margin-bottom: 10px; display: flex; justify-content: space-between; 
@@ -68,7 +78,6 @@
         .item-actions button { background: none; border: none; color: #f7e3a0; margin-left: 8px; cursor: pointer; }
         .del-btn { color: #ff8a80 !important; }
 
-        /* Notebook */
         .note-area { 
             width: 100%; height: 120px; background: #1a110f; border: 1px solid #3e2e2a; 
             border-radius: 15px; padding: 15px; color: white; margin-bottom: 15px; resize: none; 
@@ -79,11 +88,21 @@
 
 <div class="container">
     <div id="authSection" class="auth-box">
+        <div class="owner-info">
+            <h4>Owner by TARIFUL ISLAM</h4>
+            <p>📞 Phone: 01727515610</p>
+            <p>✉️ Email: tariful404@gmail.com</p>
+        </div>
+
         <h2 id="authTitle">TARIFUL 2.0</h2>
         <input type="text" id="userInput" class="auth-input" placeholder="Username">
         <input type="password" id="passInput" class="auth-input" placeholder="Password">
+        <input type="number" id="pinInput" class="auth-input hidden" placeholder="4-Digit Security PIN (Only for Register)">
+        
         <button class="btn-primary" id="submitBtn">Login</button>
+        
         <p onclick="toggleAuth()" id="toggleMsg" style="color:#f7e3a0; margin-top:15px; cursor:pointer;">New User? Register</p>
+        <p onclick="showResetPrompt()" id="forgotBtn" class="reset-link">Forgot Password?</p>
     </div>
 
     <div id="dashboard" class="hidden">
@@ -144,6 +163,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, doc, setDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+    // Firebase Config
     const firebaseConfig = {
       apiKey: "AIzaSyC4fFgrOTrv24U7oei22yT_PzV8ZH-3UC4",
       authDomain: "my-database-23e85.firebaseapp.com",
@@ -160,17 +180,29 @@
     let isLogin = true;
     let editIndex = -1;
 
-    // --- Authentication ---
+    // --- Authentication & Reset Logic ---
     window.toggleAuth = () => {
         isLogin = !isLogin;
         document.getElementById("authTitle").innerText = isLogin ? "TARIFUL 2.0" : "Register";
         document.getElementById("submitBtn").innerText = isLogin ? "Login" : "Create Account";
         document.getElementById("toggleMsg").innerText = isLogin ? "New User? Register" : "Have an account? Login";
+        
+        const pinInp = document.getElementById("pinInput");
+        const forgotBtn = document.getElementById("forgotBtn");
+        if(isLogin) {
+            pinInp.classList.add("hidden");
+            forgotBtn.classList.remove("hidden");
+        } else {
+            pinInp.classList.remove("hidden");
+            forgotBtn.classList.add("hidden");
+        }
     };
 
     document.getElementById("submitBtn").onclick = async () => {
         const u = document.getElementById("userInput").value.trim().toUpperCase();
         const p = document.getElementById("passInput").value;
+        const pin = document.getElementById("pinInput").value;
+
         if(!u || !p) { alert("Fill all fields"); return; }
 
         const ref = doc(db, "users", u);
@@ -182,11 +214,29 @@
                 goDashboard();
             } else alert("Wrong Username or Password!");
         } else {
+            if(!pin || pin.length < 4) { alert("Enter a 4-digit PIN for security!"); return; }
             if(snap.exists()) { alert("User already exists!"); return; }
-            await setDoc(ref, { password: p, history: [], notes: [] });
+            await setDoc(ref, { password: p, pin: pin, history: [], notes: [] });
             alert("Registration Successful!"); 
             toggleAuth();
         }
+    };
+
+    window.showResetPrompt = async () => {
+        const u = prompt("Enter your Username to reset password:").toUpperCase();
+        if(!u) return;
+        const ref = doc(db, "users", u);
+        const snap = await getDoc(ref);
+        if(!snap.exists()) { alert("User not found!"); return; }
+
+        const userPin = prompt("Enter your 4-digit Security PIN:");
+        if(userPin === snap.data().pin) {
+            const newPass = prompt("Enter your NEW Password:");
+            if(newPass && newPass.length > 3) {
+                await updateDoc(ref, { password: newPass });
+                alert("Password updated! Now Login.");
+            } else alert("Invalid Password!");
+        } else alert("Incorrect PIN!");
     };
 
     function goDashboard() {
@@ -196,18 +246,6 @@
         fetchData();
     }
 
-    // --- Navigation Logic ---
-    window.showApp = (id) => {
-        document.getElementById("dashboard").classList.add("hidden");
-        document.getElementById(id).classList.remove("hidden");
-    };
-
-    window.backToDash = () => {
-        document.getElementById("calcSec").classList.add("hidden");
-        document.getElementById("noteSec").classList.add("hidden");
-        document.getElementById("dashboard").classList.remove("hidden");
-    };
-
     // --- Data Operations ---
     async function fetchData() {
         if(!currentUser) return;
@@ -215,15 +253,11 @@
         const data = snap.data();
         
         document.getElementById("histList").innerHTML = (data.history || []).map((h, i) => `
-            <div class="list-item">
-                <span>${h}</span>
-                <button class="del-btn" onclick="deleteItem('history', ${i})">✕</button>
-            </div>
+            <div class="list-item"><span>${h}</span><button class="del-btn" onclick="deleteItem('history', ${i})">✕</button></div>
         `).join("");
 
         document.getElementById("notesList").innerHTML = (data.notes || []).map((n, i) => `
-            <div class="list-item">
-                <span style="flex:1">${n}</span>
+            <div class="list-item"><span style="flex:1">${n}</span>
                 <div class="item-actions">
                     <button onclick="editNote(${i}, '${n}')">Edit</button>
                     <button class="del-btn" onclick="deleteItem('notes', ${i})">Del</button>
@@ -238,25 +272,14 @@
         const ref = doc(db, "users", currentUser);
         const snap = await getDoc(ref);
         let notes = snap.data().notes || [];
-
-        if(editIndex > -1) {
-            notes[editIndex] = val;
-            editIndex = -1;
-            document.getElementById("saveNoteBtn").innerText = "Save Note";
-        } else {
-            notes.push(val);
-        }
-
+        if(editIndex > -1) { notes[editIndex] = val; editIndex = -1; document.getElementById("saveNoteBtn").innerText = "Save Note"; }
+        else { notes.push(val); }
         await updateDoc(ref, { notes });
         document.getElementById("noteInput").value = "";
         fetchData();
     };
 
-    window.editNote = (index, text) => {
-        document.getElementById("noteInput").value = text;
-        editIndex = index;
-        document.getElementById("saveNoteBtn").innerText = "Update Note";
-    };
+    window.editNote = (index, text) => { document.getElementById("noteInput").value = text; editIndex = index; document.getElementById("saveNoteBtn").innerText = "Update Note"; };
 
     window.deleteItem = async (type, index) => {
         const ref = doc(db, "users", currentUser);
@@ -276,34 +299,26 @@
         await updateDoc(ref, { history });
         fetchData();
     };
+
+    window.showApp = (id) => { document.getElementById("dashboard").classList.add("hidden"); document.getElementById(id).classList.remove("hidden"); };
+    window.backToDash = () => { document.getElementById("calcSec").classList.add("hidden"); document.getElementById("noteSec").classList.add("hidden"); document.getElementById("dashboard").classList.remove("hidden"); };
 </script>
 
 <script>
     // --- Calculator Engine ---
     let disp = document.getElementById("disp");
-    function add(v) { 
-        if(disp.innerText === "0" && v !== '.') disp.innerText = v;
-        else disp.innerText += v;
-    }
+    function add(v) { (disp.innerText === "0" && v !== '.') ? disp.innerText = v : disp.innerText += v; }
     function clr() { disp.innerText = "0"; }
-    function bk() { 
-        disp.innerText = disp.innerText.length > 1 ? disp.innerText.slice(0, -1) : "0"; 
-    }
+    function bk() { disp.innerText = disp.innerText.length > 1 ? disp.innerText.slice(0, -1) : "0"; }
     function runCalc() {
         try {
-            let expr = disp.innerText.replace(/÷/g, '/').replace(/×/g, '*');
-            let result = eval(expr);
-            let fullLog = disp.innerText + " = " + result;
-            disp.innerText = result;
-            if(window.saveCalcHistory) window.saveCalcHistory(fullLog);
-        } catch { 
-            disp.innerText = "Error"; 
-            setTimeout(()=> disp.innerText = "0", 1500);
-        }
+            let res = eval(disp.innerText.replace(/÷/g, '/').replace(/×/g, '*'));
+            let log = disp.innerText + " = " + res;
+            disp.innerText = res;
+            if(window.saveCalcHistory) window.saveCalcHistory(log);
+        } catch { disp.innerText = "Error"; setTimeout(()=> disp.innerText = "0", 1500); }
     }
-    function toggleHistory() {
-        document.getElementById("historyPanel").classList.toggle("hidden");
-    }
+    function toggleHistory() { document.getElementById("historyPanel").classList.toggle("hidden"); }
 </script>
 
 </body>
