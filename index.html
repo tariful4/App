@@ -121,15 +121,14 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, doc, setDoc, getDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // আপনার নতুন ডাটাবেস কনফিগারেশন এখানে আপডেট করা হয়েছে
+    // আপনার দেওয়া নতুন Firebase Configuration
     const firebaseConfig = {
-        apiKey: "AIzaSyDOQAsD82RZcItIsCPrRNUgHVoDNlBhQC4",
-        authDomain: "my-project-database-24693.firebaseapp.com",
-        projectId: "my-project-database-24693",
-        storageBucket: "my-project-database-24693.firebasestorage.app",
-        messagingSenderId: "373780400874",
-        appId: "1:373780400874:web:3a30ec042278ca76e5e593",
-        measurementId: "G-H1SVP7ZCLT"
+      apiKey: "AIzaSyC4fFgrOTrv24U7oei22yT_PzV8ZH-3UC4",
+      authDomain: "my-database-23e85.firebaseapp.com",
+      projectId: "my-database-23e85",
+      storageBucket: "my-database-23e85.firebasestorage.app",
+      messagingSenderId: "617226662362",
+      appId: "1:617226662362:web:ef0e72eedcb6808e4d90e3"
     };
 
     const app = initializeApp(firebaseConfig);
@@ -138,7 +137,6 @@
     let currentUsername = "";
     let isLoginMode = true;
 
-    // লগইন ও রেজিস্ট্রেশন লজিক
     window.toggleAuth = () => {
         isLoginMode = !isLoginMode;
         document.getElementById("authTitle").innerText = isLoginMode ? "TARIFUL 2.0" : "Create Account";
@@ -176,7 +174,6 @@
         loadCloudData();
     }
 
-    // অ্যাপ সুইচ করা
     window.showApp = (id) => {
         document.getElementById("dashboard").style.display = "none";
         document.getElementById("mainApp").style.display = "block";
@@ -189,32 +186,25 @@
         document.getElementById("dashboard").style.display = "block";
     };
 
-    // ডাটা সেভ এবং লোড
     window.saveToCloud = async (log) => {
-        try {
-            await updateDoc(doc(db, "users", currentUsername), { history: arrayUnion(log) });
-            loadCloudData();
-        } catch(e) { console.error("Error saving history", e); }
+        if(!currentUsername) return;
+        await updateDoc(doc(db, "users", currentUsername), { history: arrayUnion(log) });
+        loadCloudData();
     };
 
     window.saveNote = async () => {
         const txt = document.getElementById("noteInput").value.trim();
-        if(!txt) return;
+        if(!txt || !currentUsername) return;
         document.getElementById("noteSaveBtn").innerText = "Saving...";
-        try {
-            await updateDoc(doc(db, "users", currentUsername), { notes: arrayUnion(txt) });
-            document.getElementById("noteInput").value = "";
-            document.getElementById("noteSaveBtn").innerText = "Save Note";
-            loadCloudData();
-        } catch(e) { 
-            alert("Error saving note");
-            document.getElementById("noteSaveBtn").innerText = "Save Note";
-        }
+        await updateDoc(doc(db, "users", currentUsername), { notes: arrayUnion(txt) });
+        document.getElementById("noteInput").value = "";
+        document.getElementById("noteSaveBtn").innerText = "Save Note";
+        loadCloudData();
     };
 
     async function loadCloudData() {
         const snap = await getDoc(doc(db, "users", currentUsername));
-        if(snap.exists()) {
+        if(snap.exists()){
             const data = snap.data();
             document.getElementById("histList").innerHTML = (data.history || []).slice(-5).reverse().map(i => `<div class="data-item">${i}</div>`).join("");
             document.getElementById("notesList").innerHTML = (data.notes || []).slice().reverse().map(i => `<div class="data-item">📌 ${i}</div>`).join("");
@@ -223,7 +213,6 @@
 </script>
 
 <script>
-    // ক্যালকুলেটর ফাংশন
     let d = document.getElementById("disp");
     function add(v) { d.innerText = (d.innerText === "0") ? v : d.innerText + v; }
     function clr() { d.innerText = "0"; }
