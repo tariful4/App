@@ -3,51 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TARIFUL 2.0 </title>
+    <title>TARIFUL 2.0</title>
     <style>
         :root {
             --bg-color: #1a110f;
             --card-bg: #2a1f1d;
             --text-main: #efdbd5;
-            --accent: #8b442d; /* AC Button & Highlights */
+            --accent: #8b442d;
             --num-btn: #3a2e2a;
             --op-btn: #4d3d39;
-            --eq-btn: #e9e29c; /* Equals Button */
+            --eq-btn: #e9e29c;
             --eq-text: #3e2e00;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
-        body { background: var(--bg-color); color: var(--text-main); display: flex; justify-content: center; min-height: 100vh; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background: var(--bg-color); color: var(--text-main); display: flex; justify-content: center; min-height: 100vh; overflow-x: hidden; }
 
-        /* Auth & Dashboard */
         .container { width: 100%; max-width: 400px; padding: 20px; }
-        .auth-box, .dashboard-box { background: var(--card-bg); padding: 25px; border-radius: 28px; margin-top: 50px; text-align: center; border: 1px solid #3e2e2a; }
-        .auth-input { width: 100%; padding: 15px; margin: 10px 0; border-radius: 15px; border: 1px solid #553f38; background: #1a110f; color: white; outline: none; }
-        .btn-primary { width: 100%; padding: 15px; background: var(--accent); color: white; border: none; border-radius: 15px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .hidden { display: none !important; }
 
-        /* Calculator UI (Exact Match to Screenshot) */
-        #calcSec { display: none; }
-        .calc-header { display: flex; justify-content: space-between; padding: 10px; color: #bcaea9; }
-        .screen { height: 180px; display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-end; padding: 20px; font-size: 3.5rem; color: white; word-break: break-all; }
+        /* Auth & Dashboard Boxes */
+        .auth-box, .dashboard-box, .app-box { 
+            background: var(--card-bg); padding: 25px; border-radius: 28px; 
+            margin-top: 50px; text-align: center; border: 1px solid #3e2e2a; 
+        }
+
+        .auth-input { 
+            width: 100%; padding: 15px; margin: 10px 0; border-radius: 15px; 
+            border: 1px solid #553f38; background: #1a110f; color: white; outline: none; 
+        }
+
+        .btn-primary { 
+            width: 100%; padding: 15px; background: var(--accent); color: white; 
+            border: none; border-radius: 15px; font-weight: bold; cursor: pointer; margin-top: 10px; 
+        }
+
+        /* Calculator UI */
+        .calc-header { display: flex; justify-content: space-between; padding: 10px; color: #bcaea9; margin-bottom: 10px; }
+        .screen { 
+            height: 120px; display: flex; flex-direction: column; justify-content: flex-end; 
+            align-items: flex-end; padding: 20px; font-size: 2.5rem; color: white; 
+            word-break: break-all; background: #1a110f; border-radius: 15px; margin-bottom: 15px;
+        }
         
-        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 10px; }
-        .btn { height: 80px; width: 80px; border: none; border-radius: 50%; font-size: 1.6rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
-        .btn:active { opacity: 0.7; }
+        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .btn { 
+            height: 70px; width: 70px; border: none; border-radius: 50%; 
+            font-size: 1.4rem; cursor: pointer; display: flex; align-items: center; 
+            justify-content: center; transition: 0.2s; 
+        }
+        .btn:active { transform: scale(0.95); opacity: 0.8; }
         
-        .btn-ac { background: #7c3a25; color: #ffdbcf; font-weight: 500; }
+        .btn-ac { background: #7c3a25; color: #ffdbcf; }
         .btn-op { background: var(--op-btn); color: #efdbd5; }
         .btn-num { background: var(--num-btn); color: #efdbd5; }
-        .btn-eq { background: var(--eq-btn); color: var(--eq-text); border-radius: 40px; }
+        .btn-eq { background: var(--eq-btn); color: var(--eq-text); border-radius: 35px; }
 
-        /* History & Notebook Item Style */
-        .list-item { background: #251a17; padding: 15px; border-radius: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #3e2e2a; }
-        .item-actions button { background: none; border: none; color: #f7e3a0; margin-left: 10px; cursor: pointer; font-size: 0.9rem; }
+        /* List Items (History & Notes) */
+        .list-item { 
+            background: #251a17; padding: 12px; border-radius: 12px; 
+            margin-bottom: 10px; display: flex; justify-content: space-between; 
+            align-items: center; border: 1px solid #3e2e2a; font-size: 0.9rem;
+        }
+        .item-actions button { background: none; border: none; color: #f7e3a0; margin-left: 8px; cursor: pointer; }
         .del-btn { color: #ff8a80 !important; }
 
         /* Notebook */
-        .note-area { width: 100%; height: 150px; background: #2a1f1d; border: 1px solid #3e2e2a; border-radius: 20px; padding: 15px; color: white; margin-bottom: 15px; resize: none; font-size: 1rem; }
-        
-        .hidden { display: none; }
+        .note-area { 
+            width: 100%; height: 120px; background: #1a110f; border: 1px solid #3e2e2a; 
+            border-radius: 15px; padding: 15px; color: white; margin-bottom: 15px; resize: none; 
+        }
     </style>
 </head>
 <body>
@@ -64,55 +89,54 @@
     <div id="dashboard" class="hidden">
         <div class="dashboard-box">
             <h3>Welcome, <span id="displayUser" style="color:#f7e3a0;">User</span></h3>
-            <button class="btn-primary" onclick="showApp('calcSec')">Open Calculator</button>
-            <button class="btn-primary" onclick="showApp('noteSec')" style="background:#4d3d39;">Open Note Book</button>
-            <button onclick="location.reload()" style="margin-top:20px; background:none; border:none; color:#7c3a25; cursor:pointer;">Logout</button>
+            <p style="margin-bottom: 20px; color: #bcaea9;">Select an App to Run</p>
+            <button class="btn-primary" onclick="showApp('calcSec')">🔢 Calculator</button>
+            <button class="btn-primary" onclick="showApp('noteSec')" style="background:#4d3d39;">📝 Note Book</button>
+            <button onclick="location.reload()" style="margin-top:30px; background:none; border:none; color:#7c3a25; cursor:pointer; font-weight: bold;">Logout</button>
         </div>
     </div>
 
-    <div id="calcSec">
+    <div id="calcSec" class="app-box hidden">
         <div class="calc-header">
-            <span onclick="backToDash()" style="cursor:pointer">✕</span>
-            <span onclick="toggleHistory()">🕒 History</span>
+            <span onclick="backToDash()" style="cursor:pointer; font-weight: bold;">✕ Back</span>
+            <span onclick="toggleHistory()" style="cursor:pointer">🕒 History</span>
         </div>
         <div class="screen" id="disp">0</div>
         <div class="grid">
             <button class="btn btn-ac" onclick="clr()">AC</button>
-            <button class="btn btn-op" onclick="add('(')">( )</button>
-            <button class="btn btn-op" onclick="add('%')">%</button>
+            <button class="btn btn-op" onclick="add('(')">(</button>
+            <button class="btn btn-op" onclick="add(')')">)</button>
             <button class="btn btn-op" onclick="add('/')">÷</button>
-            
             <button class="btn btn-num" onclick="add('7')">7</button>
             <button class="btn btn-num" onclick="add('8')">8</button>
             <button class="btn btn-num" onclick="add('9')">9</button>
             <button class="btn btn-op" onclick="add('*')">×</button>
-            
             <button class="btn btn-num" onclick="add('4')">4</button>
             <button class="btn btn-num" onclick="add('5')">5</button>
             <button class="btn btn-num" onclick="add('6')">6</button>
             <button class="btn btn-op" onclick="add('-')">−</button>
-            
             <button class="btn btn-num" onclick="add('1')">1</button>
             <button class="btn btn-num" onclick="add('2')">2</button>
             <button class="btn btn-num" onclick="add('3')">3</button>
             <button class="btn btn-op" onclick="add('+')">+</button>
-            
             <button class="btn btn-num" onclick="add('0')">0</button>
             <button class="btn btn-num" onclick="add('.')">.</button>
             <button class="btn btn-num" onclick="bk()">⌫</button>
             <button class="btn btn-eq" onclick="runCalc()">=</button>
         </div>
-        <div id="historyPanel" class="hidden" style="margin-top:20px;">
-            <h4>History</h4>
+        <div id="historyPanel" class="hidden" style="margin-top:20px; text-align: left;">
+            <h4 style="border-bottom: 1px solid #3e2e2a; padding-bottom: 5px; margin-bottom: 10px;">History</h4>
             <div id="histList"></div>
         </div>
     </div>
 
-    <div id="noteSec" class="hidden">
-        <div class="calc-header"><span onclick="backToDash()" style="cursor:pointer">✕ Back</span></div>
-        <textarea id="noteInput" class="note-area" placeholder="Write something..."></textarea>
+    <div id="noteSec" class="app-box hidden">
+        <div class="calc-header">
+            <span onclick="backToDash()" style="cursor:pointer; font-weight: bold;">✕ Back</span>
+        </div>
+        <textarea id="noteInput" class="note-area" placeholder="Write a note..."></textarea>
         <button id="saveNoteBtn" class="btn-primary" onclick="saveNote()">Save Note</button>
-        <div id="notesList" style="margin-top:20px;"></div>
+        <div id="notesList" style="margin-top:20px; text-align: left;"></div>
     </div>
 </div>
 
@@ -136,17 +160,18 @@
     let isLogin = true;
     let editIndex = -1;
 
-    // --- Auth Logic ---
+    // --- Authentication ---
     window.toggleAuth = () => {
         isLogin = !isLogin;
         document.getElementById("authTitle").innerText = isLogin ? "TARIFUL 2.0" : "Register";
-        document.getElementById("submitBtn").innerText = isLogin ? "Login" : "Create";
+        document.getElementById("submitBtn").innerText = isLogin ? "Login" : "Create Account";
+        document.getElementById("toggleMsg").innerText = isLogin ? "New User? Register" : "Have an account? Login";
     };
 
     document.getElementById("submitBtn").onclick = async () => {
-        const u = document.getElementById("userInput").value.toUpperCase();
+        const u = document.getElementById("userInput").value.trim().toUpperCase();
         const p = document.getElementById("passInput").value;
-        if(!u || !p) return;
+        if(!u || !p) { alert("Fill all fields"); return; }
 
         const ref = doc(db, "users", u);
         const snap = await getDoc(ref);
@@ -155,10 +180,12 @@
             if(snap.exists() && snap.data().password === p) {
                 currentUser = u;
                 goDashboard();
-            } else alert("Invalid credentials!");
+            } else alert("Wrong Username or Password!");
         } else {
+            if(snap.exists()) { alert("User already exists!"); return; }
             await setDoc(ref, { password: p, history: [], notes: [] });
-            alert("Registered!"); toggleAuth();
+            alert("Registration Successful!"); 
+            toggleAuth();
         }
     };
 
@@ -169,34 +196,32 @@
         fetchData();
     }
 
+    // --- Navigation Logic ---
     window.showApp = (id) => {
         document.getElementById("dashboard").classList.add("hidden");
-        document.getElementById(id).style.display = "block";
+        document.getElementById(id).classList.remove("hidden");
     };
 
     window.backToDash = () => {
-        document.getElementById("calcSec").style.display = "none";
+        document.getElementById("calcSec").classList.add("hidden");
         document.getElementById("noteSec").classList.add("hidden");
         document.getElementById("dashboard").classList.remove("hidden");
     };
 
-    // --- Cloud Data Operations ---
+    // --- Data Operations ---
     async function fetchData() {
+        if(!currentUser) return;
         const snap = await getDoc(doc(db, "users", currentUser));
         const data = snap.data();
         
-        // Render History
-        document.getElementById("histList").innerHTML = data.history.map((h, i) => `
+        document.getElementById("histList").innerHTML = (data.history || []).map((h, i) => `
             <div class="list-item">
                 <span>${h}</span>
-                <div class="item-actions">
-                    <button class="del-btn" onclick="deleteItem('history', ${i})">Delete</button>
-                </div>
+                <button class="del-btn" onclick="deleteItem('history', ${i})">✕</button>
             </div>
         `).join("");
 
-        // Render Notes
-        document.getElementById("notesList").innerHTML = data.notes.map((n, i) => `
+        document.getElementById("notesList").innerHTML = (data.notes || []).map((n, i) => `
             <div class="list-item">
                 <span style="flex:1">${n}</span>
                 <div class="item-actions">
@@ -209,7 +234,9 @@
 
     window.saveNote = async () => {
         const val = document.getElementById("noteInput").value;
-        const snap = await getDoc(doc(db, "users", currentUser));
+        if(!val) return;
+        const ref = doc(db, "users", currentUser);
+        const snap = await getDoc(ref);
         let notes = snap.data().notes || [];
 
         if(editIndex > -1) {
@@ -220,7 +247,7 @@
             notes.push(val);
         }
 
-        await updateDoc(doc(db, "users", currentUser), { notes });
+        await updateDoc(ref, { notes });
         document.getElementById("noteInput").value = "";
         fetchData();
     };
@@ -232,28 +259,30 @@
     };
 
     window.deleteItem = async (type, index) => {
-        const snap = await getDoc(doc(db, "users", currentUser));
+        const ref = doc(db, "users", currentUser);
+        const snap = await getDoc(ref);
         let list = snap.data()[type];
         list.splice(index, 1);
-        await updateDoc(doc(db, "users", currentUser), { [type]: list });
+        await updateDoc(ref, { [type]: list });
         fetchData();
     };
 
     window.saveCalcHistory = async (res) => {
-        const snap = await getDoc(doc(db, "users", currentUser));
+        const ref = doc(db, "users", currentUser);
+        const snap = await getDoc(ref);
         let history = snap.data().history || [];
         history.unshift(res);
-        if(history.length > 20) history.pop();
-        await updateDoc(doc(db, "users", currentUser), { history });
+        if(history.length > 10) history.pop();
+        await updateDoc(ref, { history });
         fetchData();
     };
 </script>
 
 <script>
-    // --- Calculator Logic ---
+    // --- Calculator Engine ---
     let disp = document.getElementById("disp");
     function add(v) { 
-        if(disp.innerText === "0") disp.innerText = v;
+        if(disp.innerText === "0" && v !== '.') disp.innerText = v;
         else disp.innerText += v;
     }
     function clr() { disp.innerText = "0"; }
@@ -267,11 +296,13 @@
             let fullLog = disp.innerText + " = " + result;
             disp.innerText = result;
             if(window.saveCalcHistory) window.saveCalcHistory(fullLog);
-        } catch { disp.innerText = "Error"; }
+        } catch { 
+            disp.innerText = "Error"; 
+            setTimeout(()=> disp.innerText = "0", 1500);
+        }
     }
     function toggleHistory() {
-        let p = document.getElementById("historyPanel");
-        p.classList.toggle("hidden");
+        document.getElementById("historyPanel").classList.toggle("hidden");
     }
 </script>
 
