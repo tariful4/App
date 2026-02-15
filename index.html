@@ -97,7 +97,7 @@
             <p>✉️ Email: tariful404@gmail.com</p>
         </div>
 
-        <h2 id="authTitle">TARIFUL 2.0</h2>
+        <h2 id="authTitle">TARIFUL 2.0 - Pro</h2>
         <input type="text" id="userInput" class="auth-input" placeholder="Username">
         <input type="password" id="passInput" class="auth-input" placeholder="Password">
         <input type="number" id="pinInput" class="auth-input hidden" placeholder="4-Digit Security PIN (Only for Register)">
@@ -238,7 +238,7 @@
         const userPin = prompt("Enter your 4-digit Security PIN:");
         // Compare as strings to ensure match
         if(String(userPin) === String(snap.data().pin)) {
-            const newPass = prompt("Enter your NEW Password:");
+            const newPass = prompt("Enter your 4 Digit NEW Password:");
             if(newPass && newPass.trim().length > 3) {
                 await updateDoc(ref, { password: newPass.trim() });
                 alert("Password updated! Now Login.");
