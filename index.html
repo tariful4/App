@@ -20,7 +20,7 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        body { background: var(--bg-color); color: var(--text-main); display: flex; justify-content: center; min-height: 100vh; overflow-x: hidden; }
+        body { background: var(--bg-color); color: var(--text-main); display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow-x: hidden; }
 
         .container { width: 100%; max-width: 400px; padding: 20px; }
         .hidden { display: none !important; }
@@ -72,7 +72,6 @@
         .btn-num { background: var(--num-btn); color: #efdbd5; }
         .btn-eq { background: var(--eq-btn); color: var(--eq-text); border-radius: 35px; }
 
-        /* List Items */
         .list-item { 
             background: #251a17; padding: 12px; border-radius: 12px; 
             margin-bottom: 10px; display: flex; justify-content: space-between; 
@@ -85,6 +84,10 @@
             width: 100%; height: 120px; background: #1a110f; border: 1px solid #3e2e2a; 
             border-radius: 15px; padding: 15px; color: white; margin-bottom: 15px; resize: none; 
         }
+
+        /* Ad Styling */
+        .ad-slot { margin: 20px 0; text-align: center; width: 100%; overflow: hidden; }
+        .ad-label { font-size: 10px; color: #553f38; margin-bottom: 5px; text-transform: uppercase; }
     </style>
 </head>
 <body>
@@ -100,7 +103,7 @@
         <h2 id="authTitle">TARIFUL 2.0 - Pro</h2>
         <input type="text" id="userInput" class="auth-input" placeholder="Username">
         <input type="password" id="passInput" class="auth-input" placeholder="Password">
-        <input type="number" id="pinInput" class="auth-input hidden" placeholder="4-Digit Security PIN (Only for Register)">
+        <input type="number" id="pinInput" class="auth-input hidden" placeholder="4-Digit PIN (Only for Register)">
         
         <button class="btn-primary" id="submitBtn">Login</button>
         
@@ -115,6 +118,12 @@
             <button class="btn-primary" onclick="showApp('calcSec')">🔢 Calculator</button>
             <button class="btn-primary" onclick="showApp('noteSec')" style="background:#4d3d39;">📝 Note Book</button>
             <button onclick="location.reload()" style="margin-top:30px; background:none; border:none; color:#7c3a25; cursor:pointer; font-weight: bold;">Logout</button>
+        </div>
+        
+        <div class="ad-slot">
+            <div class="ad-label">Sponsored</div>
+            <script async="async" data-cfasync="false" src="https://pl28719332.effectivegatecpm.com/7a69f5b5663d8fbb10677deb63628364/invoke.js"></script> 
+            <div id="container-7a69f5b5663d8fbb10677deb63628364"></div>
         </div>
     </div>
 
@@ -162,11 +171,16 @@
     </div>
 </div>
 
+<div class="ad-slot" style="max-width: 400px; margin-bottom: 40px;">
+    <div class="ad-label">Advertisement</div>
+    <script async="async" data-cfasync="false" src="https://pl28719332.effectivegatecpm.com/7a69f5b5663d8fbb10677deb63628364/invoke.js"></script> 
+    <div id="container-7a69f5b5663d8fbb10677deb63628364"></div>
+</div>
+
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, doc, setDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // Firebase Config
     const firebaseConfig = {
       apiKey: "AIzaSyC4fFgrOTrv24U7oei22yT_PzV8ZH-3UC4",
       authDomain: "my-database-23e85.firebaseapp.com",
@@ -183,69 +197,47 @@
     let isLogin = true;
     let editIndex = -1;
 
-    // --- Authentication & Reset Logic ---
     window.toggleAuth = () => {
         isLogin = !isLogin;
         document.getElementById("authTitle").innerText = isLogin ? "TARIFUL 2.0" : "Register";
         document.getElementById("submitBtn").innerText = isLogin ? "Login" : "Create Account";
         document.getElementById("toggleMsg").innerText = isLogin ? "New User? Register" : "Have an account? Login";
-        
         const pinInp = document.getElementById("pinInput");
         const forgotBtn = document.getElementById("forgotBtn");
-        if(isLogin) {
-            pinInp.classList.add("hidden");
-            forgotBtn.classList.remove("hidden");
-        } else {
-            pinInp.classList.remove("hidden");
-            forgotBtn.classList.add("hidden");
-        }
+        if(isLogin) { pinInp.classList.add("hidden"); forgotBtn.classList.remove("hidden"); }
+        else { pinInp.classList.remove("hidden"); forgotBtn.classList.add("hidden"); }
     };
 
     document.getElementById("submitBtn").onclick = async () => {
         const u = document.getElementById("userInput").value.trim().toUpperCase();
         const p = document.getElementById("passInput").value.trim();
         const pin = document.getElementById("pinInput").value;
-
         if(!u || !p) { alert("Fill all fields"); return; }
-
         const ref = doc(db, "users", u);
         const snap = await getDoc(ref);
-
         if(isLogin) {
-            // String comparison to avoid type issues
-            if(snap.exists() && String(snap.data().password) === String(p)) {
-                currentUser = u;
-                goDashboard();
-            } else alert("Wrong Username or Password!");
+            if(snap.exists() && String(snap.data().password) === String(p)) { currentUser = u; goDashboard(); }
+            else alert("Wrong Username or Password!");
         } else {
-            if(!pin || pin.length < 4) { alert("Enter a 4-digit PIN for security!"); return; }
+            if(!pin || pin.length < 4) { alert("Enter 4-digit PIN!"); return; }
             if(snap.exists()) { alert("User already exists!"); return; }
             await setDoc(ref, { password: p, pin: pin, history: [], notes: [] });
-            alert("Registration Successful!"); 
-            toggleAuth();
+            alert("Success!"); toggleAuth();
         }
     };
 
     window.showResetPrompt = async () => {
-        let u = prompt("Enter your Username to reset password:");
+        let u = prompt("Enter Username:");
         if(!u) return;
         u = u.trim().toUpperCase();
-        
         const ref = doc(db, "users", u);
         const snap = await getDoc(ref);
         if(!snap.exists()) { alert("User not found!"); return; }
-
-        const userPin = prompt("Enter your 4-digit Security PIN:");
-        // Compare as strings to ensure match
+        const userPin = prompt("Enter 4-digit PIN:");
         if(String(userPin) === String(snap.data().pin)) {
-            const newPass = prompt("Enter your 4 Digit NEW Password:");
-            if(newPass && newPass.trim().length > 3) {
-                await updateDoc(ref, { password: newPass.trim() });
-                alert("Password updated! Now Login.");
-                // Clear input for safety
-                document.getElementById("passInput").value = "";
-            } else alert("Invalid Password!");
-        } else alert("Incorrect PIN!");
+            const newPass = prompt("Enter NEW Password:");
+            if(newPass) { await updateDoc(ref, { password: newPass.trim() }); alert("Done!"); }
+        } else alert("Wrong PIN!");
     };
 
     function goDashboard() {
@@ -255,16 +247,13 @@
         fetchData();
     }
 
-    // --- Data Operations ---
     async function fetchData() {
         if(!currentUser) return;
         const snap = await getDoc(doc(db, "users", currentUser));
         const data = snap.data();
-        
         document.getElementById("histList").innerHTML = (data.history || []).map((h, i) => `
             <div class="list-item"><span>${h}</span><button class="del-btn" onclick="deleteItem('history', ${i})">✕</button></div>
         `).join("");
-
         document.getElementById("notesList").innerHTML = (data.notes || []).map((n, i) => `
             <div class="list-item"><span style="flex:1">${n}</span>
                 <div class="item-actions">
@@ -314,7 +303,6 @@
 </script>
 
 <script>
-    // --- Calculator Engine ---
     let disp = document.getElementById("disp");
     function add(v) { (disp.innerText === "0" && v !== '.') ? disp.innerText = v : disp.innerText += v; }
     function clr() { disp.innerText = "0"; }
