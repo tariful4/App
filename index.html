@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TARIFUL 2.0 - Pro</title>
     
-    <meta name="description" content="TARIFUL 2.0 - A powerful all-in-one Pro App featuring a professional Calculator and Note Book for daily productivity by Tariful Islam.">
-    
     <style>
         :root {
             --bg-color: #1a110f;
@@ -25,19 +23,11 @@
         .container { width: 100%; max-width: 400px; padding: 20px; }
         .hidden { display: none !important; }
 
-        /* Auth & Dashboard Boxes */
         .auth-box, .dashboard-box, .app-box { 
             background: var(--card-bg); padding: 25px; border-radius: 28px; 
-            margin-top: 30px; text-align: center; border: 1px solid #3e2e2a; 
+            margin-top: 15px; text-align: center; border: 1px solid #3e2e2a; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-
-        .owner-info {
-            margin-bottom: 20px; padding-bottom: 15px; 
-            border-bottom: 1px dashed #553f38; line-height: 1.6;
-        }
-        .owner-info h4 { color: #e9e29c; font-size: 1.1rem; text-transform: uppercase; }
-        .owner-info p { font-size: 0.85rem; color: #bcaea9; }
 
         .auth-input { 
             width: 100%; padding: 15px; margin: 10px 0; border-radius: 15px; 
@@ -49,41 +39,37 @@
             border: none; border-radius: 15px; font-weight: bold; cursor: pointer; margin-top: 10px; 
         }
 
-        .reset-link { color: #ff8a80; font-size: 0.8rem; cursor: pointer; display: block; margin-top: 15px; text-decoration: underline; }
+        #balanceCard {
+            background: linear-gradient(135deg, #8b442d 0%, #3e2e2a 100%);
+            padding: 25px; border-radius: 20px; margin-bottom: 10px; text-align: center;
+        }
+        .balance-amount { font-size: 2.2rem; font-weight: bold; color: #e9e29c; margin: 5px 0; }
 
-        /* Calculator UI */
-        .calc-header { display: flex; justify-content: space-between; padding: 10px; color: #bcaea9; margin-bottom: 10px; }
+        .back-btn {
+            display: inline-flex; align-items: center; gap: 5px;
+            background: #3e2e2a; color: #e9e29c; padding: 8px 15px; 
+            border-radius: 10px; cursor: pointer; font-weight: bold; margin-bottom: 15px;
+        }
+
         .screen { 
-            height: 120px; display: flex; flex-direction: column; justify-content: flex-end; 
-            align-items: flex-end; padding: 20px; font-size: 2.5rem; color: white; 
-            word-break: break-all; background: #1a110f; border-radius: 15px; margin-bottom: 15px;
+            height: 100px; display: flex; flex-direction: column; justify-content: flex-end; 
+            align-items: flex-end; padding: 15px; font-size: 2.2rem; color: white; 
+            background: #1a110f; border-radius: 15px; margin-bottom: 15px;
         }
         
         .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-        .btn { 
-            height: 70px; width: 70px; border: none; border-radius: 50%; 
-            font-size: 1.4rem; cursor: pointer; display: flex; align-items: center; 
-            justify-content: center; transition: 0.2s; 
-        }
-        .btn:active { transform: scale(0.95); opacity: 0.8; }
-        
+        .btn { height: 65px; width: 65px; border: none; border-radius: 50%; font-size: 1.3rem; cursor: pointer; transition: 0.2s; }
+        .btn:active { transform: scale(0.9); }
         .btn-ac { background: #7c3a25; color: #ffdbcf; }
         .btn-op { background: var(--op-btn); color: #efdbd5; }
         .btn-num { background: var(--num-btn); color: #efdbd5; }
         .btn-eq { background: var(--eq-btn); color: var(--eq-text); border-radius: 35px; }
 
-        /* List Items */
+        .list-container { margin-top: 20px; text-align: left; max-height: 250px; overflow-y: auto; }
         .list-item { 
             background: #251a17; padding: 12px; border-radius: 12px; 
-            margin-bottom: 10px; display: flex; justify-content: space-between; 
-            align-items: center; border: 1px solid #3e2e2a; font-size: 0.9rem;
-        }
-        .item-actions button { background: none; border: none; color: #f7e3a0; margin-left: 8px; cursor: pointer; }
-        .del-btn { color: #ff8a80 !important; }
-
-        .note-area { 
-            width: 100%; height: 120px; background: #1a110f; border: 1px solid #3e2e2a; 
-            border-radius: 15px; padding: 15px; color: white; margin-bottom: 15px; resize: none; 
+            margin-bottom: 8px; border: 1px solid #3e2e2a; font-size: 0.85rem;
+            display: flex; justify-content: space-between; align-items: center;
         }
     </style>
 </head>
@@ -91,82 +77,92 @@
 
 <div class="container">
     <div id="authSection" class="auth-box">
-        <div class="owner-info">
-            <h4>Owner by TARIFUL ISLAM</h4>
-            <p>📞 Phone: 01727515610</p>
-            <p>✉️ Email: tariful404@gmail.com</p>
-        </div>
-
-        <h2 id="authTitle">TARIFUL 2.0 - Pro</h2>
+        <h2 id="authTitle">TARIFUL 2.0</h2>
         <input type="text" id="userInput" class="auth-input" placeholder="Username">
         <input type="password" id="passInput" class="auth-input" placeholder="Password">
-        <input type="number" id="pinInput" class="auth-input hidden" placeholder="4-Digit Security PIN (Only for Register)">
-        
+        <div id="registerFields" class="hidden">
+            <input type="number" id="pinInput" class="auth-input" placeholder="4-Digit Security PIN">
+        </div>
         <button class="btn-primary" id="submitBtn">Login</button>
-        
         <p onclick="toggleAuth()" id="toggleMsg" style="color:#f7e3a0; margin-top:15px; cursor:pointer;">New User? Register</p>
-        <p onclick="showResetPrompt()" id="forgotBtn" class="reset-link">Forgot Password?</p>
+        <p onclick="showResetPrompt()" style="color: #ff8a80; cursor: pointer; text-decoration: underline; margin-top: 10px; font-size: 0.8rem;">Forgot Password?</p>
     </div>
 
-    <div id="dashboard" class="hidden">
-        <div class="dashboard-box">
+    <div id="mainApp" class="hidden">
+        <div id="balanceCard">
+            <p style="font-size: 0.8rem; opacity: 0.8;">Available Balance</p>
+            <div class="balance-amount"><span id="userBal">0.00</span> TK</div>
+        </div>
+
+        <div id="dashboard" class="dashboard-box">
             <h3>Welcome, <span id="displayUser" style="color:#f7e3a0;">User</span></h3>
-            <p style="margin-bottom: 20px; color: #bcaea9;">Select an App to Run</p>
+            <button class="btn-primary" onclick="showApp('sendSec')">💸 Send Money</button>
             <button class="btn-primary" onclick="showApp('calcSec')">🔢 Calculator</button>
             <button class="btn-primary" onclick="showApp('noteSec')" style="background:#4d3d39;">📝 Note Book</button>
-            <button onclick="location.reload()" style="margin-top:30px; background:none; border:none; color:#7c3a25; cursor:pointer; font-weight: bold;">Logout</button>
+            <button onclick="location.reload()" style="margin-top:20px; background:none; border:none; color:#7c3a25; cursor:pointer; font-weight: bold;">Logout</button>
         </div>
-    </div>
 
-    <div id="calcSec" class="app-box hidden">
-        <div class="calc-header">
-            <span onclick="backToDash()" style="cursor:pointer; font-weight: bold;">✕ Back</span>
-            <span onclick="toggleHistory()" style="cursor:pointer">🕒 History</span>
+        <div id="calcSec" class="app-box hidden">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="back-btn" onclick="backToDash()">← Back</div>
+                <span onclick="toggleSection('calcHistory')" style="cursor:pointer; color: #e9e29c; font-size: 0.8rem;">🕒 History</span>
+            </div>
+            <div class="screen" id="disp">0</div>
+            <div class="grid">
+                <button class="btn btn-ac" onclick="clr()">AC</button>
+                <button class="btn btn-op" onclick="add('(')">(</button>
+                <button class="btn btn-op" onclick="add(')')">)</button>
+                <button class="btn btn-op" onclick="add('/')">÷</button>
+                <button class="btn btn-num" onclick="add('7')">7</button>
+                <button class="btn btn-num" onclick="add('8')">8</button>
+                <button class="btn btn-num" onclick="add('9')">9</button>
+                <button class="btn btn-op" onclick="add('*')">×</button>
+                <button class="btn btn-num" onclick="add('4')">4</button>
+                <button class="btn btn-num" onclick="add('5')">5</button>
+                <button class="btn btn-num" onclick="add('6')">6</button>
+                <button class="btn btn-op" onclick="add('-')">−</button>
+                <button class="btn btn-num" onclick="add('1')">1</button>
+                <button class="btn btn-num" onclick="add('2')">2</button>
+                <button class="btn btn-num" onclick="add('3')">3</button>
+                <button class="btn btn-op" onclick="add('+')">+</button>
+                <button class="btn btn-num" onclick="add('0')">0</button>
+                <button class="btn btn-num" onclick="add('.')">.</button>
+                <button class="btn btn-num" onclick="bk()">⌫</button>
+                <button class="btn btn-eq" onclick="runCalc()">=</button>
+            </div>
+            <div id="calcHistory" class="list-container hidden">
+                <div id="histList"></div>
+            </div>
         </div>
-        <div class="screen" id="disp">0</div>
-        <div class="grid">
-            <button class="btn btn-ac" onclick="clr()">AC</button>
-            <button class="btn btn-op" onclick="add('(')">(</button>
-            <button class="btn btn-op" onclick="add(')')">)</button>
-            <button class="btn btn-op" onclick="add('/')">÷</button>
-            <button class="btn btn-num" onclick="add('7')">7</button>
-            <button class="btn btn-num" onclick="add('8')">8</button>
-            <button class="btn btn-num" onclick="add('9')">9</button>
-            <button class="btn btn-op" onclick="add('*')">×</button>
-            <button class="btn btn-num" onclick="add('4')">4</button>
-            <button class="btn btn-num" onclick="add('5')">5</button>
-            <button class="btn btn-num" onclick="add('6')">6</button>
-            <button class="btn btn-op" onclick="add('-')">−</button>
-            <button class="btn btn-num" onclick="add('1')">1</button>
-            <button class="btn btn-num" onclick="add('2')">2</button>
-            <button class="btn btn-num" onclick="add('3')">3</button>
-            <button class="btn btn-op" onclick="add('+')">+</button>
-            <button class="btn btn-num" onclick="add('0')">0</button>
-            <button class="btn btn-num" onclick="add('.')">.</button>
-            <button class="btn btn-num" onclick="bk()">⌫</button>
-            <button class="btn btn-eq" onclick="runCalc()">=</button>
-        </div>
-        <div id="historyPanel" class="hidden" style="margin-top:20px; text-align: left;">
-            <h4 style="border-bottom: 1px solid #3e2e2a; padding-bottom: 5px; margin-bottom: 10px;">History</h4>
-            <div id="histList"></div>
-        </div>
-    </div>
 
-    <div id="noteSec" class="app-box hidden">
-        <div class="calc-header">
-            <span onclick="backToDash()" style="cursor:pointer; font-weight: bold;">✕ Back</span>
+        <div id="sendSec" class="app-box hidden">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="back-btn" onclick="backToDash()">← Back</div>
+                <span onclick="toggleSection('moneyHistory')" style="cursor:pointer; color: #e9e29c; font-size: 0.8rem;">🕒 History</span>
+            </div>
+            <h3>Send Money</h3>
+            <input type="text" id="receiverInput" class="auth-input" placeholder="Receiver Username">
+            <input type="number" id="amountInput" class="auth-input" placeholder="Amount (TK)">
+            <input type="password" id="transferPass" class="auth-input" placeholder="Your Password">
+            <button class="btn-primary" onclick="sendMoney()">Transfer Now</button>
+            <div id="moneyHistory" class="list-container hidden">
+                <div id="moneyHistList"></div>
+            </div>
         </div>
-        <textarea id="noteInput" class="note-area" placeholder="Write a note..."></textarea>
-        <button id="saveNoteBtn" class="btn-primary" onclick="saveNote()">Save Note</button>
-        <div id="notesList" style="margin-top:20px; text-align: left;"></div>
+
+        <div id="noteSec" class="app-box hidden">
+            <div class="back-btn" onclick="backToDash()">← Back</div>
+            <textarea id="noteInput" style="width:100%; height:100px; background:#1a110f; color:white; padding:10px; border-radius:10px; border:1px solid #3e2e2a;" placeholder="Write a note..."></textarea>
+            <button class="btn-primary" onclick="saveNote()">Save Note</button>
+            <div id="notesList" class="list-container"></div>
+        </div>
     </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, doc, setDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, doc, setDoc, getDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // Firebase Config
     const firebaseConfig = {
       apiKey: "AIzaSyC4fFgrOTrv24U7oei22yT_PzV8ZH-3UC4",
       authDomain: "my-database-23e85.firebaseapp.com",
@@ -180,141 +176,137 @@
     const db = getFirestore(app);
 
     let currentUser = "";
-    let isLogin = true;
-    let editIndex = -1;
+    let isLoginMode = true;
 
-    // --- Authentication & Reset Logic ---
     window.toggleAuth = () => {
-        isLogin = !isLogin;
-        document.getElementById("authTitle").innerText = isLogin ? "TARIFUL 2.0" : "Register";
-        document.getElementById("submitBtn").innerText = isLogin ? "Login" : "Create Account";
-        document.getElementById("toggleMsg").innerText = isLogin ? "New User? Register" : "Have an account? Login";
-        
-        const pinInp = document.getElementById("pinInput");
-        const forgotBtn = document.getElementById("forgotBtn");
-        if(isLogin) {
-            pinInp.classList.add("hidden");
-            forgotBtn.classList.remove("hidden");
-        } else {
-            pinInp.classList.remove("hidden");
-            forgotBtn.classList.add("hidden");
-        }
+        isLoginMode = !isLoginMode;
+        document.getElementById("authTitle").innerText = isLoginMode ? "TARIFUL 2.0" : "Registration";
+        document.getElementById("submitBtn").innerText = isLoginMode ? "Login" : "Register";
+        document.getElementById("registerFields").classList.toggle("hidden", isLoginMode);
     };
 
     document.getElementById("submitBtn").onclick = async () => {
         const u = document.getElementById("userInput").value.trim().toUpperCase();
         const p = document.getElementById("passInput").value.trim();
-        const pin = document.getElementById("pinInput").value;
+        const pin = document.getElementById("pinInput").value.trim();
 
-        if(!u || !p) { alert("Fill all fields"); return; }
+        if(!u || !p) return alert("Fill fields!");
 
         const ref = doc(db, "users", u);
         const snap = await getDoc(ref);
 
-        if(isLogin) {
-            // String comparison to avoid type issues
+        if(isLoginMode) {
             if(snap.exists() && String(snap.data().password) === String(p)) {
                 currentUser = u;
-                goDashboard();
-            } else alert("Wrong Username or Password!");
+                document.getElementById("authSection").classList.add("hidden");
+                document.getElementById("mainApp").classList.remove("hidden");
+                document.getElementById("displayUser").innerText = currentUser;
+                fetchData();
+            } else alert("Invalid Login!");
         } else {
-            if(!pin || pin.length < 4) { alert("Enter a 4-digit PIN for security!"); return; }
-            if(snap.exists()) { alert("User already exists!"); return; }
-            await setDoc(ref, { password: p, pin: pin, history: [], notes: [] });
-            alert("Registration Successful!"); 
-            toggleAuth();
+            if(snap.exists()) return alert("User exists!");
+            if(!pin) return alert("PIN Required!");
+            await setDoc(ref, { 
+                password: p, 
+                pin: pin, 
+                balance: 0, // <--- New user balance is 0
+                history: [], 
+                notes: [], 
+                moneyHistory: [] 
+            });
+            alert("Registered! Please Login."); toggleAuth();
         }
     };
 
     window.showResetPrompt = async () => {
-        let u = prompt("Enter your Username to reset password:");
-        if(!u) return;
-        u = u.trim().toUpperCase();
-        
+        let u = prompt("Username:").toUpperCase();
         const ref = doc(db, "users", u);
         const snap = await getDoc(ref);
-        if(!snap.exists()) { alert("User not found!"); return; }
-
-        const userPin = prompt("Enter your 4-digit Security PIN:");
-        // Compare as strings to ensure match
-        if(String(userPin) === String(snap.data().pin)) {
-            const newPass = prompt("Enter your 4 Digit NEW Password:");
-            if(newPass && newPass.trim().length > 3) {
-                await updateDoc(ref, { password: newPass.trim() });
-                alert("Password updated! Now Login.");
-                // Clear input for safety
-                document.getElementById("passInput").value = "";
-            } else alert("Invalid Password!");
-        } else alert("Incorrect PIN!");
+        if(!snap.exists()) return alert("Not found!");
+        let pin = prompt("Security PIN:");
+        if(String(pin) === String(snap.data().pin)) {
+            let newP = prompt("New Password:");
+            await updateDoc(ref, { password: newP });
+            alert("Success!");
+        } else alert("Wrong PIN!");
     };
 
-    function goDashboard() {
-        document.getElementById("authSection").classList.add("hidden");
-        document.getElementById("dashboard").classList.remove("hidden");
-        document.getElementById("displayUser").innerText = currentUser;
-        fetchData();
-    }
-
-    // --- Data Operations ---
     async function fetchData() {
         if(!currentUser) return;
         const snap = await getDoc(doc(db, "users", currentUser));
         const data = snap.data();
+        document.getElementById("userBal").innerText = (data.balance || 0).toFixed(2);
         
-        document.getElementById("histList").innerHTML = (data.history || []).map((h, i) => `
-            <div class="list-item"><span>${h}</span><button class="del-btn" onclick="deleteItem('history', ${i})">✕</button></div>
-        `).join("");
-
-        document.getElementById("notesList").innerHTML = (data.notes || []).map((n, i) => `
-            <div class="list-item"><span style="flex:1">${n}</span>
-                <div class="item-actions">
-                    <button onclick="editNote(${i}, '${n}')">Edit</button>
-                    <button class="del-btn" onclick="deleteItem('notes', ${i})">Del</button>
-                </div>
-            </div>
-        `).join("");
+        // Render Lists
+        document.getElementById("histList").innerHTML = (data.history || []).slice().reverse().map(h => `<div class="list-item">${h}</div>`).join("");
+        document.getElementById("moneyHistList").innerHTML = (data.moneyHistory || []).slice().reverse().map(m => `<div class="list-item">${m}</div>`).join("");
+        document.getElementById("notesList").innerHTML = (data.notes || []).map((n, i) => `<div class="list-item"><span>${n}</span> <button onclick="deleteNote(${i})" style="color:red; background:none; border:none;">✕</button></div>`).join("");
     }
+
+    window.saveCalcHistory = async (log) => {
+        await updateDoc(doc(db, "users", currentUser), { history: arrayUnion(log) });
+        fetchData();
+    };
 
     window.saveNote = async () => {
         const val = document.getElementById("noteInput").value;
         if(!val) return;
-        const ref = doc(db, "users", currentUser);
-        const snap = await getDoc(ref);
-        let notes = snap.data().notes || [];
-        if(editIndex > -1) { notes[editIndex] = val; editIndex = -1; document.getElementById("saveNoteBtn").innerText = "Save Note"; }
-        else { notes.push(val); }
-        await updateDoc(ref, { notes });
+        await updateDoc(doc(db, "users", currentUser), { notes: arrayUnion(val) });
         document.getElementById("noteInput").value = "";
         fetchData();
     };
 
-    window.editNote = (index, text) => { document.getElementById("noteInput").value = text; editIndex = index; document.getElementById("saveNoteBtn").innerText = "Update Note"; };
-
-    window.deleteItem = async (type, index) => {
-        const ref = doc(db, "users", currentUser);
-        const snap = await getDoc(ref);
-        let list = snap.data()[type];
-        list.splice(index, 1);
-        await updateDoc(ref, { [type]: list });
+    window.deleteNote = async (i) => {
+        const snap = await getDoc(doc(db, "users", currentUser));
+        let notes = snap.data().notes;
+        notes.splice(i, 1);
+        await updateDoc(doc(db, "users", currentUser), { notes });
         fetchData();
     };
 
-    window.saveCalcHistory = async (res) => {
-        const ref = doc(db, "users", currentUser);
-        const snap = await getDoc(ref);
-        let history = snap.data().history || [];
-        history.unshift(res);
-        if(history.length > 10) history.pop();
-        await updateDoc(ref, { history });
+    window.sendMoney = async () => {
+        const rec = document.getElementById("receiverInput").value.trim().toUpperCase();
+        const amt = parseFloat(document.getElementById("amountInput").value);
+        const pass = document.getElementById("transferPass").value;
+
+        if(!rec || isNaN(amt) || amt <= 0) return alert("Invalid amount!");
+
+        const sRef = doc(db, "users", currentUser);
+        const sSnap = await getDoc(sRef);
+        if(sSnap.data().password !== pass) return alert("Wrong Password!");
+        if(sSnap.data().balance < amt) return alert("Low Balance!");
+
+        const rRef = doc(db, "users", rec);
+        const rSnap = await getDoc(rRef);
+        if(!rSnap.exists() || rec === currentUser) return alert("Receiver Not Found!");
+
+        await updateDoc(sRef, { 
+            balance: sSnap.data().balance - amt,
+            moneyHistory: arrayUnion(`Sent ${amt} TK to ${rec}`)
+        });
+        await updateDoc(rRef, { 
+            balance: (rSnap.data().balance || 0) + amt,
+            moneyHistory: arrayUnion(`Received ${amt} TK from ${currentUser}`)
+        });
+
+        alert("Money Sent!");
         fetchData();
     };
 
-    window.showApp = (id) => { document.getElementById("dashboard").classList.add("hidden"); document.getElementById(id).classList.remove("hidden"); };
-    window.backToDash = () => { document.getElementById("calcSec").classList.add("hidden"); document.getElementById("noteSec").classList.add("hidden"); document.getElementById("dashboard").classList.remove("hidden"); };
+    window.showApp = (id) => {
+        document.getElementById("dashboard").classList.add("hidden");
+        document.getElementById("balanceCard").classList.add("hidden");
+        document.getElementById(id).classList.remove("hidden");
+    };
+    window.backToDash = () => {
+        document.querySelectorAll('.app-box').forEach(el => el.classList.add('hidden'));
+        document.getElementById("dashboard").classList.remove("hidden");
+        document.getElementById("balanceCard").classList.remove("hidden");
+    };
+    window.toggleSection = (id) => document.getElementById(id).classList.toggle("hidden");
 </script>
 
 <script>
-    // --- Calculator Engine ---
     let disp = document.getElementById("disp");
     function add(v) { (disp.innerText === "0" && v !== '.') ? disp.innerText = v : disp.innerText += v; }
     function clr() { disp.innerText = "0"; }
@@ -325,9 +317,8 @@
             let log = disp.innerText + " = " + res;
             disp.innerText = res;
             if(window.saveCalcHistory) window.saveCalcHistory(log);
-        } catch { disp.innerText = "Error"; setTimeout(()=> disp.innerText = "0", 1500); }
+        } catch { disp.innerText = "Error"; }
     }
-    function toggleHistory() { document.getElementById("historyPanel").classList.toggle("hidden"); }
 </script>
 
 </body>
