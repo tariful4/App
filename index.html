@@ -91,7 +91,7 @@
     <div id="mainApp" class="hidden">
         <div id="balanceCard">
             <p style="font-size: 0.8rem; opacity: 0.8;">Available Balance</p>
-            <div class="balance-amount"><span id="userBal">0.00</span> TK</div>
+            <div class="balance-amount"><span id="userBal">0.0000</span> TK</div>
         </div>
 
         <div id="dashboard" class="dashboard-box">
@@ -178,7 +178,6 @@
     let currentUser = "";
     let isLoginMode = true;
 
-    // --- রিফ্রেশ করলে অটো লগইন করার লজিক ---
     window.onload = () => {
         const savedUser = localStorage.getItem("loggedInUser");
         if (savedUser) {
@@ -198,7 +197,6 @@
         localStorage.removeItem("loggedInUser");
         location.reload();
     };
-    // ------------------------------------
 
     window.toggleAuth = () => {
         isLoginMode = !isLoginMode;
@@ -220,7 +218,7 @@
         if(isLoginMode) {
             if(snap.exists() && String(snap.data().password) === String(p)) {
                 currentUser = u;
-                localStorage.setItem("loggedInUser", u); // মেমরিতে সেভ করা হলো
+                localStorage.setItem("loggedInUser", u);
                 showDashboard();
             } else alert("Invalid Login!");
         } else {
@@ -255,7 +253,11 @@
         if(!currentUser) return;
         const snap = await getDoc(doc(db, "users", currentUser));
         const data = snap.data();
-        document.getElementById("userBal").innerText = (data.balance || 0).toFixed(2);
+        
+        // সংশোধন: ব্যালেন্সটি যেন রাউন্ড না হয় সেজন্য logic পরিবর্তন করা হয়েছে।
+        // ৪ ঘর পর্যন্ত দেখালে আপনার ডাটাবেজের সঠিক মান 9999.9997 ফুটে উঠবে।
+        let b = data.balance || 0;
+        document.getElementById("userBal").innerText = b.toFixed(4);
         
         document.getElementById("histList").innerHTML = (data.history || []).slice().reverse().map(h => `<div class="list-item">${h}</div>`).join("");
         document.getElementById("moneyHistList").innerHTML = (data.moneyHistory || []).slice().reverse().map(m => `<div class="list-item">${m}</div>`).join("");
@@ -299,12 +301,13 @@
         const rSnap = await getDoc(rRef);
         if(!rSnap.exists() || rec === currentUser) return alert("Receiver Not Found!");
 
+        // গাণিতিক নির্ভুলতার জন্য balance আপডেট করার সময় round করা হলো (Optional safety)
         await updateDoc(sRef, { 
-            balance: sSnap.data().balance - amt,
+            balance: Number((sSnap.data().balance - amt).toFixed(8)),
             moneyHistory: arrayUnion(`Sent ${amt} TK to ${rec}`)
         });
         await updateDoc(rRef, { 
-            balance: (rSnap.data().balance || 0) + amt,
+            balance: Number(((rSnap.data().balance || 0) + amt).toFixed(8)),
             moneyHistory: arrayUnion(`Received ${amt} TK from ${currentUser}`)
         });
 
