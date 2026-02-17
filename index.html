@@ -43,7 +43,7 @@
             background: linear-gradient(135deg, #8b442d 0%, #3e2e2a 100%);
             padding: 25px; border-radius: 20px; margin-bottom: 10px; text-align: center;
         }
-        .balance-amount { font-size: 1.8rem; font-weight: bold; color: #e9e29c; margin: 5px 0; word-break: break-all; }
+        .balance-amount { font-size: 2.2rem; font-weight: bold; color: #e9e29c; margin: 5px 0; }
 
         .back-btn {
             display: inline-flex; align-items: center; gap: 5px;
@@ -142,7 +142,7 @@
             </div>
             <h3>Send Money</h3>
             <input type="text" id="receiverInput" class="auth-input" placeholder="Receiver Username">
-            <input type="number" id="amountInput" class="auth-input" placeholder="Amount (TK)" step="any">
+            <input type="number" id="amountInput" class="auth-input" placeholder="Amount (TK)">
             <input type="password" id="transferPass" class="auth-input" placeholder="Your Password">
             <button class="btn-primary" onclick="sendMoney()">Transfer Now</button>
             <div id="moneyHistory" class="list-container hidden">
@@ -178,6 +178,7 @@
     let currentUser = "";
     let isLoginMode = true;
 
+    // --- রিফ্রেশ করলে অটো লগইন করার লজিক ---
     window.onload = () => {
         const savedUser = localStorage.getItem("loggedInUser");
         if (savedUser) {
@@ -197,6 +198,7 @@
         localStorage.removeItem("loggedInUser");
         location.reload();
     };
+    // ------------------------------------
 
     window.toggleAuth = () => {
         isLoginMode = !isLoginMode;
@@ -218,7 +220,7 @@
         if(isLoginMode) {
             if(snap.exists() && String(snap.data().password) === String(p)) {
                 currentUser = u;
-                localStorage.setItem("loggedInUser", u);
+                localStorage.setItem("loggedInUser", u); // মেমরিতে সেভ করা হলো
                 showDashboard();
             } else alert("Invalid Login!");
         } else {
@@ -238,45 +240,26 @@
 
     window.showResetPrompt = async () => {
         let u = prompt("Username:").toUpperCase();
-        if(!u) return;
         const ref = doc(db, "users", u);
         const snap = await getDoc(ref);
         if(!snap.exists()) return alert("Not found!");
         let pin = prompt("Security PIN:");
         if(String(pin) === String(snap.data().pin)) {
             let newP = prompt("New Password:");
-            if(newP) {
-                await updateDoc(ref, { password: newP });
-                alert("Success!");
-            }
+            await updateDoc(ref, { password: newP });
+            alert("Success!");
         } else alert("Wrong PIN!");
     };
 
     async function fetchData() {
         if(!currentUser) return;
         const snap = await getDoc(doc(db, "users", currentUser));
-        if(!snap.exists()) return;
         const data = snap.data();
-        
-        // সংশোধন: খুব ছোট সংখ্যা দেখানোর জন্য লজিক
-        const balance = data.balance || 0;
-        if(balance > 0 && balance < 0.01) {
-            document.getElementById("userBal").innerText = balance.toFixed(8);
-        } else {
-            document.getElementById("userBal").innerText = balance.toFixed(2);
-        }
+        document.getElementById("userBal").innerText = (data.balance || 0).toFixed(2);
         
         document.getElementById("histList").innerHTML = (data.history || []).slice().reverse().map(h => `<div class="list-item">${h}</div>`).join("");
         document.getElementById("moneyHistList").innerHTML = (data.moneyHistory || []).slice().reverse().map(m => `<div class="list-item">${m}</div>`).join("");
-        
-        // নোট ডিলিট হ্যান্ডলিং আপডেট করা হয়েছে
-        const notesHTML = (data.notes || []).map((n, i) => `
-            <div class="list-item">
-                <span>${n}</span> 
-                <button onclick="window.deleteNote(${i})" style="color:red; background:none; border:none; cursor:pointer;">✕</button>
-            </div>
-        `).join("");
-        document.getElementById("notesList").innerHTML = notesHTML;
+        document.getElementById("notesList").innerHTML = (data.notes || []).map((n, i) => `<div class="list-item"><span>${n}</span> <button onclick="deleteNote(${i})" style="color:red; background:none; border:none;">✕</button></div>`).join("");
     }
 
     window.saveCalcHistory = async (log) => {
@@ -285,7 +268,7 @@
     };
 
     window.saveNote = async () => {
-        const val = document.getElementById("noteInput").value.trim();
+        const val = document.getElementById("noteInput").value;
         if(!val) return;
         await updateDoc(doc(db, "users", currentUser), { notes: arrayUnion(val) });
         document.getElementById("noteInput").value = "";
@@ -326,8 +309,6 @@
         });
 
         alert("Money Sent!");
-        document.getElementById("amountInput").value = "";
-        document.getElementById("transferPass").value = "";
         fetchData();
     };
 
