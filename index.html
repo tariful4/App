@@ -99,7 +99,7 @@
             <button class="btn-primary" onclick="showApp('sendSec')">💸 Send Money</button>
             <button class="btn-primary" onclick="showApp('calcSec')">🔢 Calculator</button>
             <button class="btn-primary" onclick="showApp('noteSec')" style="background:#4d3d39;">📝 Note Book</button>
-            <button onclick="location.reload()" style="margin-top:20px; background:none; border:none; color:#7c3a25; cursor:pointer; font-weight: bold;">Logout</button>
+            <button onclick="logout()" style="margin-top:20px; background:none; border:none; color:#7c3a25; cursor:pointer; font-weight: bold;">Logout</button>
         </div>
 
         <div id="calcSec" class="app-box hidden">
@@ -178,6 +178,28 @@
     let currentUser = "";
     let isLoginMode = true;
 
+    // --- রিফ্রেশ করলে অটো লগইন করার লজিক ---
+    window.onload = () => {
+        const savedUser = localStorage.getItem("loggedInUser");
+        if (savedUser) {
+            currentUser = savedUser;
+            showDashboard();
+        }
+    };
+
+    function showDashboard() {
+        document.getElementById("authSection").classList.add("hidden");
+        document.getElementById("mainApp").classList.remove("hidden");
+        document.getElementById("displayUser").innerText = currentUser;
+        fetchData();
+    }
+
+    window.logout = () => {
+        localStorage.removeItem("loggedInUser");
+        location.reload();
+    };
+    // ------------------------------------
+
     window.toggleAuth = () => {
         isLoginMode = !isLoginMode;
         document.getElementById("authTitle").innerText = isLoginMode ? "TARIFUL 2.0" : "Registration";
@@ -198,10 +220,8 @@
         if(isLoginMode) {
             if(snap.exists() && String(snap.data().password) === String(p)) {
                 currentUser = u;
-                document.getElementById("authSection").classList.add("hidden");
-                document.getElementById("mainApp").classList.remove("hidden");
-                document.getElementById("displayUser").innerText = currentUser;
-                fetchData();
+                localStorage.setItem("loggedInUser", u); // মেমরিতে সেভ করা হলো
+                showDashboard();
             } else alert("Invalid Login!");
         } else {
             if(snap.exists()) return alert("User exists!");
@@ -209,7 +229,7 @@
             await setDoc(ref, { 
                 password: p, 
                 pin: pin, 
-                balance: 0, // <--- New user balance is 0
+                balance: 0, 
                 history: [], 
                 notes: [], 
                 moneyHistory: [] 
@@ -237,7 +257,6 @@
         const data = snap.data();
         document.getElementById("userBal").innerText = (data.balance || 0).toFixed(2);
         
-        // Render Lists
         document.getElementById("histList").innerHTML = (data.history || []).slice().reverse().map(h => `<div class="list-item">${h}</div>`).join("");
         document.getElementById("moneyHistList").innerHTML = (data.moneyHistory || []).slice().reverse().map(m => `<div class="list-item">${m}</div>`).join("");
         document.getElementById("notesList").innerHTML = (data.notes || []).map((n, i) => `<div class="list-item"><span>${n}</span> <button onclick="deleteNote(${i})" style="color:red; background:none; border:none;">✕</button></div>`).join("");
